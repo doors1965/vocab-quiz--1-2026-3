@@ -1,0 +1,1521 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>2026년 3월 고1 학력평가 단어 Quiz</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+:root{
+  --acc:#1A3A5C;--acc2:#2C5282;--grn:#1E6B3C;--grn-l:#E3F5EB;
+  --red:#8B0000;--red-l:#FDEDEC;--bg:#F5F2EB;--sf:#FEFCF7;--sf2:#EEEBE3;
+  --ink:#1A1814;--ink2:#6B6760;--ink3:#A8A49E;
+  --bd:rgba(26,24,20,.13);--bds:rgba(26,24,20,.26);--r:10px;--rl:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;}
+.nav{background:var(--acc);color:#fff;padding:0 .75rem;display:flex;align-items:center;position:sticky;top:0;z-index:100;box-shadow:0 2px 6px rgba(0,0,0,.25);}
+.nav-title{font-size:13px;font-weight:700;margin-right:auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding-right:8px;}
+.nav-tab{padding:13px 14px;font-size:13px;font-weight:600;cursor:pointer;border:none;border-bottom:3px solid transparent;color:rgba(255,255,255,.6);background:none;font-family:inherit;white-space:nowrap;transition:all .15s;}
+.nav-tab.active{color:#fff;border-bottom-color:#fff;}
+.nav-tab:hover{color:#fff;}
+.panel{display:none;padding:1rem 1rem 3rem;max-width:760px;margin:0 auto;}
+.panel.active{display:block;}
+.card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rl);padding:1.2rem;margin-bottom:1rem;}
+.ct{font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.6px;margin-bottom:.85rem;}
+.qgrid{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:.6rem;}
+.qbtn{padding:5px 11px;border:1.5px solid var(--bds);border-radius:20px;background:var(--sf);color:var(--ink2);font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;user-select:none;font-family:inherit;}
+.qbtn:hover{background:var(--sf2);}
+.qbtn.on{background:var(--acc);color:#fff;border-color:var(--acc);}
+.lbtn{background:none;border:none;color:var(--acc);font-size:12px;cursor:pointer;text-decoration:underline;padding:0;font-family:inherit;}
+.ctr{font-size:12px;color:var(--ink2);margin-top:.4rem;}
+.ctr strong{color:var(--acc);}
+.opt-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:.55rem;}
+.ck{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--ink2);cursor:pointer;}
+.ck input{width:15px;height:15px;accent-color:var(--acc);}
+.ck small{color:var(--ink3);font-size:11px;}
+input[type=text]{padding:7px 11px;border:1px solid var(--bds);border-radius:var(--r);font-size:13px;background:var(--sf);color:var(--ink);font-family:inherit;outline:none;}
+input[type=text]:focus{border-color:var(--acc);}
+.btn{padding:10px 18px;border-radius:var(--r);font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit;transition:all .15s;}
+.btn-p{background:var(--acc);color:#fff;}
+.btn-p:hover{background:#0f2640;}
+.btn-s{background:var(--sf2);color:var(--ink);border:1px solid var(--bds);}
+.btn-s:hover{background:#ddd9d0;}
+.btn-g{background:var(--grn);color:#fff;}
+.btn-g:hover{background:#155230;}
+.brow{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:.75rem;}
+.st{font-size:12px;padding:8px 12px;border-radius:var(--r);margin-top:.65rem;display:none;}
+.ok{background:var(--grn-l);color:var(--grn);border:1px solid #a8dbb8;}
+.er{background:var(--red-l);color:var(--red);border:1px solid #f5c0c0;}
+/* Mode cards */
+.mc{border:2px solid var(--bds);border-radius:var(--rl);padding:1rem;cursor:pointer;transition:all .15s;margin-bottom:.65rem;}
+.mc:hover{border-color:var(--acc);}
+.mc.sel{border-color:var(--acc);background:#E3EEF7;}
+.mc-t{font-size:13px;font-weight:700;color:var(--ink);}
+.mc-d{font-size:12px;color:var(--ink2);margin-top:2px;}
+/* Live score */
+.lscore{display:flex;gap:12px;background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.6rem 1rem;margin-bottom:1rem;flex-wrap:wrap;}
+.ls{font-size:11px;color:var(--ink2);}
+.ls span{font-size:15px;font-weight:700;color:var(--ink);display:block;}
+/* Progress */
+.prog-t{height:4px;background:var(--sf2);border-radius:2px;margin-bottom:1.2rem;}
+.prog-f{height:4px;background:var(--acc);border-radius:2px;transition:width .3s;}
+/* Q card */
+.qcard{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rl);padding:1.2rem;margin-bottom:.85rem;}
+.qmeta{display:flex;gap:5px;margin-bottom:.55rem;flex-wrap:wrap;align-items:center;}
+.qnum{font-size:11px;color:var(--ink3);}
+.badge{font-size:10px;padding:2px 6px;border-radius:8px;font-weight:700;}
+.bQ18,.bQ19{background:#FFF8F0;color:#E65100;}
+.bQ20,.bQ21{background:#EAFAF1;color:#1B5E20;}
+.bQ22,.bQ23,.bQ24{background:#EBF5FB;color:#0D47A1;}
+.bQ26{background:#FDEDEC;color:#880E4F;}
+.bQ29,.bQ30{background:#F5EEF8;color:#4A148C;}
+.bQ31,.bQ32,.bQ33,.bQ34,.bQ35{background:#E8F8F5;color:#004D40;}
+.bQ36,.bQ37,.bQ38,.bQ39,.bQ40{background:#FEFDE7;color:#827717;}
+.bQ4142,.bQ4345{background:#F0EBFF;color:#311B92;}
+.tbadge{font-size:10px;padding:2px 6px;border-radius:8px;font-weight:700;background:#E3EEF7;color:var(--acc);}
+.qprompt{font-size:15px;font-weight:600;color:var(--ink);margin-bottom:.4rem;line-height:1.5;}
+.qhint{font-size:12px;color:var(--ink2);margin-bottom:.85rem;line-height:1.5;font-style:italic;}
+.opts{display:grid;gap:7px;}
+.obtn{text-align:left;background:var(--sf2);border:1.5px solid var(--bds);border-radius:var(--r);padding:9px 13px;font-size:13px;color:var(--ink);cursor:pointer;transition:all .15s;font-family:inherit;line-height:1.4;}
+.obtn:hover:not(:disabled){background:#ddd9d0;border-color:var(--acc);}
+.obtn.correct{background:var(--grn-l);border-color:var(--grn);color:var(--grn);font-weight:600;}
+.obtn.wrong{background:var(--red-l);border-color:var(--red);color:var(--red);}
+.obtn.reveal{background:var(--grn-l);border-color:var(--grn);color:var(--grn);}
+.frow{display:flex;gap:7px;flex-wrap:wrap;align-items:center;}
+.finp{flex:1;min-width:160px;padding:9px 12px;border:1.5px solid var(--bds);border-radius:var(--r);font-size:14px;font-family:inherit;background:var(--sf);color:var(--ink);outline:none;}
+.finp:focus{border-color:var(--acc);}
+.finp.correct{border-color:var(--grn);background:var(--grn-l);color:var(--grn);}
+.finp.wrong{border-color:var(--red);background:var(--red-l);color:var(--red);}
+.expl{font-size:12px;color:var(--ink2);margin-top:.65rem;padding:7px 11px;background:var(--sf2);border-radius:var(--r);border-left:3px solid var(--acc);display:none;line-height:1.6;}
+.eng-def{font-size:11px;color:var(--acc);background:#E3EEF7;border-radius:6px;padding:3px 9px;display:inline-block;margin-bottom:.5rem;font-style:italic;}
+/* Score */
+.score-emoji{font-size:2.8rem;text-align:center;margin:.75rem 0 .25rem;}
+.score-big{font-size:3rem;font-weight:700;color:var(--acc);text-align:center;}
+.score-sub{font-size:13px;color:var(--ink2);text-align:center;margin-bottom:1.25rem;}
+.sgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(100px,1fr));gap:8px;margin-bottom:1.25rem;}
+.sbox{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.8rem;text-align:center;}
+.sbox .v{font-size:1.5rem;font-weight:700;color:var(--ink);}
+.sbox .l{font-size:11px;color:var(--ink2);margin-top:2px;}
+.ritem{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:.85rem;margin-bottom:.5rem;border-left:3px solid var(--red);}
+.rword{font-size:13px;font-weight:700;}
+.rans{font-size:12px;margin-top:3px;line-height:1.55;}
+@media(max-width:480px){
+  .nav-title{font-size:12px;}
+  .nav-tab{padding:12px 10px;font-size:11px;}
+  .qprompt{font-size:14px;}
+  .obtn{font-size:13px;}
+}
+
+/* ── SCRAMBLE ── */
+.scr-sentence{margin-bottom:1rem;}
+.scr-label{font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.5rem;}
+.scr-zone{min-height:52px;border:2px dashed var(--bds);border-radius:var(--r);padding:8px;display:flex;flex-wrap:wrap;gap:6px;background:var(--sf);transition:border-color .2s;align-content:flex-start;}
+.scr-zone.correct-zone{border-color:var(--grn);background:var(--grn-l);}
+.scr-zone.wrong-zone{border-color:var(--red);background:var(--red-l);}
+.word-chip{padding:7px 13px;background:#fff;border:1.5px solid var(--bds);border-radius:20px;font-size:13px;color:var(--ink);cursor:pointer;user-select:none;transition:all .15s;font-family:inherit;line-height:1;}
+.word-chip:hover:not(:disabled){border-color:var(--acc);background:#E3EEF7;transform:translateY(-1px);}
+.word-chip.correct-chip{background:var(--grn-l);border-color:var(--grn);color:var(--grn);cursor:default;}
+.word-chip.wrong-chip{background:var(--red-l);border-color:var(--red);color:var(--red);}
+.scr-feedback{font-size:13px;margin-top:8px;font-weight:600;min-height:20px;}
+.scr-feedback.ok{color:var(--grn);}
+.scr-feedback.ng{color:var(--red);}
+.scr-key{font-size:12px;color:var(--ink2);font-style:italic;margin-top:5px;padding:6px 10px;background:var(--grn-l);border-radius:var(--r);border-left:3px solid var(--grn);}
+.scr-word-label{font-size:13px;font-weight:700;color:var(--acc);margin-bottom:4px;}
+.scr-word-ko{font-size:12px;margin-bottom:.75rem;line-height:1.6;}
+
+/* ── CATEGORY CARDS ── */
+.cat-card{border:2px solid var(--bds);border-radius:var(--rl);overflow:hidden;cursor:pointer;transition:border-color .2s;}
+.cat-card:hover{border-color:var(--acc);}
+.cat-card.cat-active{border-color:var(--acc);}
+.cat-header{display:flex;align-items:center;justify-content:space-between;padding:.9rem 1rem;background:var(--sf2);gap:10px;}
+.cat-title{font-size:14px;font-weight:700;color:var(--ink);}
+.cat-desc{font-size:12px;color:var(--ink2);margin-top:2px;}
+.cat-arrow{font-size:13px;color:var(--acc);font-weight:700;flex-shrink:0;transition:transform .2s;}
+.cat-body{padding:.75rem .75rem .25rem;}
+.cat-body .mc{margin-bottom:.5rem;}
+.cat-body .mc:last-child{margin-bottom:.25rem;}
+
+/* ── DIFFICULTY STARS ── */
+.stars{font-size:11px;margin-left:5px;vertical-align:middle;letter-spacing:1px;}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-title">📚 2026년 3월 고1 학력평가 단어 Quiz</div>
+  <button class="nav-tab active" id="tab-btn-teacher">🖥 Teacher</button>
+  <button class="nav-tab" id="tab-btn-student">📱 Student</button>
+</div>
+
+<!-- TEACHER -->
+<div class="panel active" id="panel-teacher">
+  <div class="card">
+    <div class="ct">Step 1 — Select questions</div>
+    <div class="qgrid" id="tq-grid"></div>
+    <div style="display:flex;gap:10px;margin-bottom:.5rem;">
+      <button class="lbtn" id="tq-all">Select all</button>
+      <button class="lbtn" id="tq-clr">Clear all</button>
+    </div>
+    <div class="ctr" id="tq-ctr">0 words selected</div>
+  </div>
+  <div class="card">
+    <div class="ct">Step 2 — Format</div>
+    <div class="opt-row">
+      <label class="ck"><input type="checkbox" id="t-ko" checked><span>Korean meaning <small>(Eng→Kor)</small></span></label>
+      <label class="ck"><input type="checkbox" id="t-en" checked><span>English word <small>(Kor→Eng)</small></span></label>
+    </div>
+    <div class="opt-row">
+      <label class="ck"><input type="checkbox" id="t-fi" checked><span>Fill-in-the-blank</span></label>
+      <label class="ck"><input type="checkbox" id="t-po" checked><span>Part of speech</span></label>
+    </div>
+    <div class="opt-row" style="margin-top:.4rem;">
+      <label class="ck"><input type="checkbox" id="t-sh" checked><span>Shuffle</span></label>
+      <label class="ck"><input type="checkbox" id="t-ky" checked><span>Answer key sheet</span></label>
+    </div>
+    <div style="margin-top:.65rem;font-size:13px;color:var(--ink2);">
+      Class: <input type="text" id="t-cls" placeholder="e.g. 2학년 1반" style="width:150px;margin-left:6px;">
+    </div>
+  </div>
+  <div class="card">
+    <div class="ct">Step 3 — Generate</div>
+    <div class="brow">
+      <button class="btn btn-s" id="t-prev-btn">Preview</button>
+      <button class="btn btn-p" id="t-gen-btn">⬇ Download Excel quiz</button>
+    </div>
+    <div class="st" id="t-status"></div>
+    <div id="t-preview" style="overflow-x:auto;margin-top:.5rem;font-size:12px;"></div>
+  </div>
+</div>
+
+<!-- STUDENT -->
+<div class="panel" id="panel-student">
+  <div id="s-setup">
+    <div class="card">
+      <div class="ct">Select questions</div>
+      <div class="qgrid" id="sq-grid"></div>
+      <div style="display:flex;gap:10px;margin-bottom:.5rem;">
+        <button class="lbtn" id="sq-all">Select all</button>
+        <button class="lbtn" id="sq-clr">Clear all</button>
+      </div>
+      <div class="ctr" id="sq-ctr">0 words selected</div>
+    </div>
+    <div class="card">
+      <div class="ct">Quiz type</div>
+
+      <!-- Category 1 -->
+      <div class="cat-card" id="cat-vocab" onclick="toggleCat('vocab')">
+        <div class="cat-header">
+          <div>
+            <div class="cat-title">📚 Let's Study Vocabulary!</div>
+            <div class="cat-desc">Word meaning, spelling &amp; definition quizzes</div>
+          </div>
+          <div class="cat-arrow" id="arrow-vocab">▼</div>
+        </div>
+        <div class="cat-body" id="body-vocab" style="display:none;">
+          <div class="mc sel" id="mode-mc"><div class="mc-t">Multiple choice 객관식 <span class="stars">⭐⭐</span></div><div class="mc-d">4 options — pick the correct Korean meaning</div></div>
+          <div class="mc" id="mode-w1"><div class="mc-t">✍️ Type 1 — Korean → English <span class="stars">⭐⭐⭐</span></div><div class="mc-d">See Korean meaning → type the English word</div></div>
+          <div class="mc" id="mode-w2"><div class="mc-t">✍️ Type 2 — Definition → English <span class="stars">⭐⭐⭐</span></div><div class="mc-d">See English definition → type the English word</div></div>
+        </div>
+      </div>
+
+      <!-- Category 2 -->
+      <div class="cat-card" id="cat-sent" onclick="toggleCat('sent')" style="margin-top:.6rem;">
+        <div class="cat-header">
+          <div>
+            <div class="cat-title">📝 Let's Study Sentences!</div>
+            <div class="cat-desc">Fill in blanks &amp; rebuild example sentences</div>
+          </div>
+          <div class="cat-arrow" id="arrow-sent">▶</div>
+        </div>
+        <div class="cat-body" id="body-sent" style="display:none;">
+          <div class="mc" id="mode-fi"><div class="mc-t">Fill in the blank 빈칸 채우기 <span class="stars">⭐⭐⭐</span></div><div class="mc-d">Type the missing word in the example sentence</div></div>
+          <div class="mc" id="mode-scr"><div class="mc-t">🔀 Sentence Scramble <span class="stars">⭐⭐⭐⭐⭐</span></div><div class="mc-d">Click words to rebuild the example sentence in order</div></div>
+          <div class="mc" id="mode-scr2"><div class="mc-t">🌈 Medium Scramble <span class="stars">⭐⭐</span></div><div class="mc-d">Words colour-coded by part of speech as a hint</div></div>
+          <div class="mc" id="mode-scr3"><div class="mc-t">🧩 Easy Scramble — Chunks <span class="stars">⭐</span></div><div class="mc-d">Arrange meaningful phrase chunks in the right order</div></div>
+        </div>
+      </div>
+
+    </div>
+    <div class="card">
+      <div class="ct">Options</div>
+      <div class="opt-row">
+        <label class="ck"><input type="checkbox" id="s-sh" checked><span>Shuffle questions</span></label>
+        <label class="ck"><input type="checkbox" id="s-rv"><span>Show explanation after each answer</span></label>
+      </div>
+      <div style="margin-top:.6rem;font-size:13px;color:var(--ink2);">
+        Name: <input type="text" id="s-name" placeholder="이름 (선택사항)" style="width:150px;margin-left:6px;">
+      </div>
+    </div>
+    <button class="btn btn-g" id="s-start" style="width:100%;padding:13px;font-size:15px;">Start Quiz →</button>
+    <div class="st" id="s-status"></div>
+  </div>
+
+  <div id="s-quiz" style="display:none;">
+    <div class="lscore">
+      <div class="ls"><span id="ls-c">0</span>Correct ✓</div>
+      <div class="ls"><span id="ls-w">0</span>Wrong ✗</div>
+      <div class="ls"><span id="ls-r">—</span>Left</div>
+      <div class="ls"><span id="ls-p">—</span>Score</div>
+    </div>
+    <div class="prog-t"><div class="prog-f" id="prog" style="width:0%"></div></div>
+    <div id="q-container"></div>
+    <div class="brow" style="margin-top:1rem;">
+      <button class="btn btn-s" id="s-reveal">Reveal all</button>
+      <button class="btn btn-p" id="s-results">See results →</button>
+    </div>
+  </div>
+
+  <div id="s-score" style="display:none;">
+    <div class="card">
+      <div class="score-emoji" id="sc-emoji"></div>
+      <div class="score-big" id="sc-pct"></div>
+      <div class="score-sub" id="sc-sub"></div>
+      <div id="sc-datetime" style="text-align:center;font-size:14px;color:#000000;margin-top:6px;font-family:monospace;font-weight:700;letter-spacing:.3px;"></div>
+      <div id="sc-encourage" style="text-align:center;font-size:14px;font-weight:600;margin-top:10px;padding:10px 16px;border-radius:10px;"></div>
+    </div>
+    <div class="sgrid" id="sc-grid"></div>
+    <div class="brow">
+      <button class="btn btn-p" id="sc-retry">Try again ↺</button>
+      <button class="btn btn-s" id="sc-new">New quiz</button>
+    </div>
+    <div style="margin-top:1.25rem;">
+      <div class="ct" style="margin-bottom:.65rem;">Wrong answers — review</div>
+      <div id="sc-review"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+var WL=[["upcoming","adj.","다가오는, 곧 있을","Thank you for your interest in the upcoming reopening of the center.","Q18"],["repair","n.","수리, 보수","Unfortunately, during the repair process, unexpected electrical issues were discovered.","Q18"],["unexpected","adj.","예상치 못한, 뜻밖의","Unfortunately, during the repair process, unexpected electrical issues were discovered.","Q18"],["electrical","adj.","전기의","Unexpected electrical issues were discovered, causing the work to take longer than we planned.","Q18"],["delay","v.","연기하다, 지연시키다","We regret to inform you that the center's reopening must be delayed.","Q18"],["regret","v.","유감스럽게 생각하다","We regret to inform you that the center's reopening must be delayed.","Q18"],["ensure","v.","보장하다, 확실히 하다","It will now reopen on May 1st to ensure the safety of all members.","Q18"],["patience","n.","인내, 참을성","Thank you for your patience and understanding.","Q18"],["carnival","n.","카니발, 축제","It was the first carnival for the four-year-old girl, Cassie.","Q19"],["imagine","v.","상상하다","She had been imagining colorful balloons and delicious candies for a long time.","Q19"],["twinkling","adj.","반짝이는","When she finally arrived at the carnival, the twinkling lights and music made her jump with joy.","Q19"],["magician","n.","마술사","The magician showed his tricks and she cheered with her family.","Q19"],["parade","n.","퍼레이드, 행진","But suddenly, she saw a lot of huge balloons in the parade coming towards her.","Q19"],["freeze","v.","굳다, 얼어붙다","Cassie froze and dropped her cotton candy on the ground.","Q19"],["monster","n.","괴물","She thought they were too big, like monsters.","Q19"],["influence","v.","영향을 미치다","There is simply no better way to influence or stir an audience.","Q20"],["instantly","adv.","즉각적으로, 즉시","There is simply no better way to influence or stir an audience — instantly, powerfully, authentically.","Q20"],["anecdote","n.","일화, 짧은 이야기","There is no better way to influence an audience than by opening up to them with a personal story or anecdote.","Q20"],["biographical","adj.","전기적인, 개인 이력에 관한","I'm saying that you can share a key biographical detail.","Q20"],["bond with","phrasal v.","~와 유대감을 형성하다","It is a tried-and-tested way of bonding with an audience of strangers.","Q20"],["persuade","v.","설득하다","Laying the groundwork for you to then persuade them.","Q20"],["identify with","phrasal v.","~와 동질감을 느끼다","By sharing a revealing story or a personal flaw, you allow audience members a way to identify with you.","Q20"],["flaw","n.","결점, 흠","By sharing a revealing story or a personal flaw, you allow audience members a way to identify with you.","Q20"],["reveal","v.","드러내다, 밝히다","By sharing a revealing story or a personal flaw, you allow audience members a way to identify with you.","Q20"],["unprecedented","adj.","전례 없는","We are now at a point of unprecedented genetic, cultural, and environmental power as a species.","Q21"],["responsibility","n.","책임","Our decisions today have far-reaching impacts that place a responsibility on us to become good ancestors.","Q21"],["ancestor","n.","조상","Our decisions today have far-reaching impacts that place a responsibility on us to become good ancestors.","Q21"],["descendant","n.","후손, 자손","We must not steal the shade from our descendants.","Q21"],["stewardship","n.","관리, 청지기 직분","Leaders of the native North American Iroquois people created 'seven generation stewardship.'","Q21"],["consider","v.","고려하다","Instructing people to consider the impact of every decision on their children.","Q21"],["well-being","n.","복지, 안녕","To imagine the well-being of billions of people whose lives will be lived in the world we are currently making.","Q21"],["neuroplasticity","n.","신경 가소성","Taste preferences can be changed throughout our lives due to neuroplasticity, our brain's amazing adaptability.","Q22"],["adaptability","n.","적응력","Taste preferences can be changed throughout our lives due to neuroplasticity, our brain's amazing adaptability.","Q22"],["flexibility","n.","유연성","There is far more flexibility in our food behaviors than most think, even as we age.","Q22"],["preference","n.","선호도","Taste preferences can be changed throughout our lives due to neuroplasticity.","Q22"],["nutritious","adj.","영양분이 많은","Just as kids gradually learn to like nutritious foods, so, too, can adults readjust their taste.","Q22"],["gradually","adv.","서서히, 점차적으로","Just as kids gradually learn to like nutritious foods, so, too, can adults readjust their taste.","Q22"],["readjust","v.","재조정하다, 다시 적응하다","Just as kids gradually learn to like nutritious foods, so, too, can adults readjust their taste.","Q22"],["exposure","n.","노출","Repeated exposure — and a willingness to change — is the key.","Q22"],["willingness","n.","의지, 기꺼이 하려는 마음","Repeated exposure — and a willingness to change — is the key.","Q22"],["conformity","n.","순응, 복종","Conformity in the teenage years has been studied by putting young people in situations.","Q23"],["peak","n.","정점, 최고조","The willingness to go along with others reaches a peak around the age of 14.","Q23"],["tendency","n.","경향, 성향","After that, this tendency decreases.","Q23"],["decrease","v.","감소하다, 줄어들다","After that, this tendency decreases, so that by 16 or 17, young people are much more able to disagree with the group.","Q23"],["peer group","n. phrase","또래 집단","It demonstrates that the influence of the peer group is not the same across all ages.","Q23"],["mature","v.","성숙하다","As young people mature, they become more resilient.","Q23"],["resilient","adj.","회복 탄력적인","As young people mature, they become more resilient, and more able to defend their opinions as individuals.","Q23"],["defend","v.","방어하다, 지키다","More able to defend their opinions as individuals.","Q23"],["stand up for","phrasal v.","~을 지지하다, 옹호하다","Young people are much more able to disagree with the group and to stand up for their own opinion.","Q23"],["essential","adj.","필수적인","Understanding how the brain uses habits, and how you can work with them, is essential for business.","Q24"],["temptation","n.","유혹","Would you do better by attaching to another one (known as temptation bundling)?","Q24"],["bundle","v.","묶다, 결합하다","Would you do better by attaching to another one (known as temptation bundling)?","Q24"],["participant","n.","참가자","Participants could only have access to their audio devices while at the gym.","Q24"],["access","n.","접근, 이용","Participants could only have access to their audio devices while at the gym.","Q24"],["combine","v.","결합하다","This uses a tempting habit and combines it with a habit people would like to build.","Q24"],["opt to","phrasal v.","~하기로 선택하다","Nearly two-thirds opted to pay to have gym-only access for their devices.","Q24"],["survey","n.","설문 조사","The above graph shows the top benefits of working from home, based on a 2023 global survey of over 20,000 workers.","Q25"],["respondent","n.","응답자","The biggest benefit was 'No Commute,' chosen by just under 60 percent of respondents.","Q25"],["commute","n.","통근","The biggest benefit was 'No Commute,' chosen by just under 60 percent of respondents.","Q25"],["flexibility","n.","유연성","'Save on Gas and Lunch Costs' came in second place, and 'Flexibility over When I Work' ranked third.","Q25"],["cite","v.","언급하다, 인용하다","The percentage of respondents citing 'Individual Quiet Time' was lower than that of those who selected 'Spending More Time with Family and Friends.'","Q25"],["gap","n.","차이, 격차","The gap between the percentage of respondents who selected 'Fewer Meetings' and that of those who selected 'No Commute' was about 50 percentage points.","Q25"],["foundation","n.","기초, 토대","He received training that laid the foundation for his career.","Q26"],["lay the foundation for","phrasal v.","~의 토대를 마련하다","He received training that laid the foundation for his career.","Q26"],["lose control of","phrasal v.","~을 제어할 수 없게 되다","In the late 1970s, Graffman lost control of the fingers on his right hand.","Q26"],["give up","phrasal v.","포기하다","He never gave up playing the piano.","Q26"],["reconsider","v.","재고하다, 다시 생각하다","Reconsidering the traditional piano performance convention of using both hands, he focused on works for the left hand alone.","Q26"],["convention","n.","관습, 관례","Reconsidering the traditional piano performance convention of using both hands.","Q26"],["outstanding","adj.","뛰어난, 탁월한","There he taught many outstanding young musicians, including Lang Lang.","Q26"],["commitment","n.","헌신, 전념","His lifelong commitment to music continues to inspire people today.","Q26"],["inspire","v.","영감을 주다, 고무하다","His lifelong commitment to music continues to inspire people today.","Q26"],["convenient","adj.","편리한","If you are looking for a convenient parking option in our city, check out the Green Parking Pass!","Q27"],["available","adj.","이용 가능한","Basic type is available from 9 a.m. to 6 p.m.","Q27"],["reserved","adj.","예약된","Premium type includes at any time + reserved parking space.","Q27"],["purchase","v.","구매하다","The pass can be purchased online or at the city public parking offices.","Q27"],["direct","v.","감독하다, 지시하다","You'll write, direct, shoot, and edit your own project.","Q28"],["edit","v.","편집하다","You'll write, direct, shoot, and edit your own project.","Q28"],["interactive","adj.","상호 작용하는","You'll participate in online interactive classes with real-time instruction.","Q28"],["instruction","n.","지도, 교육","You'll participate in online interactive classes with real-time instruction.","Q28"],["screen","v.","상영하다","You'll complete your own film to be screened at the end of the camp.","Q28"],["conceptual","adj.","개념적인","A conceptual model is an explanation, usually highly simplified, of how something works.","Q29"],["simplified","adj.","단순화된","A conceptual model is an explanation, usually highly simplified, of how something works.","Q29"],["accurate","adj.","정확한","It doesn't have to be complete or even accurate as long as it is useful.","Q29"],["conceptualization","n.","개념화","Those are effective conceptualizations designed to make them easier to use.","Q29"],["confusion","n.","혼란, 혼동","Sometimes these depictions can add to the confusion.","Q29"],["coherent","adj.","일관된, 논리적인","The conceptual model is of one, coherent image.","Q29"],["consist of","phrasal v.","~으로 구성되다","It may actually consist of parts, each located on different machines.","Q29"],["transportation","n.","교통, 운송","The principal transportation mode in the developing world is still walking.","Q30"],["constraint","n.","제약, 제한","Because of constraints on the resources needed to operate extensive transit systems.","Q30"],["expend","v.","소비하다, 쓰다","People cover long distances on foot every day and expend human energy that they can hardly spare.","Q30"],["unavoidable","adj.","피할 수 없는","Walking under those conditions is an unavoidable burden.","Q30"],["burden","n.","부담, 짐","Walking under those conditions is an unavoidable burden that consumes productive capability.","Q30"],["efficient","adj.","효율적인","In North America and Western Europe, walking is efficient, healthful, and natural.","Q30"],["reverse","v.","역전시키다, 뒤집다","Some of the current trends should be reversed.","Q30"],["simulate","v.","모의 실험하다, 흉내 내다","Treadmills simulate walking, which could be otherwise accomplished with a transport purpose on the street.","Q30"],["overwhelmed","adj.","압도된","They can feel overwhelmed by so much stuff.","Q31"],["streamline","v.","간소화하다","Streamlining a play space is so important.","Q31"],["imaginative","adj.","상상력이 풍부한","You want your kids to feel inspired and imaginative in the room.","Q31"],["indecision","n.","우유부단, 결정을 못 함","Not overcome with indecision.","Q31"],["mastery","n.","완전한 습득, 숙달","Students often mistake familiarity with true mastery.","Q32"],["illusion","n.","착각, 환상","Creating a dangerous 'illusion of competence.'","Q32"],["competence","n.","능력, 역량","Creating a dangerous 'illusion of competence' where recognizing information feels like genuine knowledge.","Q32"],["genuine","adj.","진짜의, 진정한","Recognizing information feels like genuine knowledge.","Q32"],["overestimate","v.","과대평가하다","This cognitive bias leads learners to overestimate their understanding.","Q32"],["counter","v.","반박하다, 대항하다","Teaching materials actively counters this illusion.","Q32"],["peer-teaching","n.","동료 교수법","It introduces powerful methods like teaching imaginary students, peer-teaching in study groups.","Q32"],["expose","v.","드러내다, 노출시키다","Exposing and filling gaps in knowledge.","Q32"],["numeral","n.","숫자","They would represent five fish with a numeral for the number five alongside a symbol for the fish.","Q33"],["represent","v.","나타내다, 표현하다","They would represent five fish with a numeral for the number five alongside a symbol for the fish.","Q33"],["intellectual","adj.","지적인","Their first great intellectual leap came from separating the number from the object they were counting.","Q33"],["leap","n.","도약, 비약","Their first great intellectual leap came from separating the number from the object.","Q33"],["emancipated","adj.","해방된","The Sumerians had developed the idea of an emancipated number, existing in its own right.","Q33"],["take for granted","idiom","당연하게 여기다","It is easy to take the emancipated number for granted as it is so deeply set into modern thought.","Q33"],["civilization","n.","문명","To the earliest civilizations it was intellectually new and extremely powerful.","Q33"],["ingroup","n.","내집단","The emphasis on learning from the ingroup takes little account of individuals.","Q34"],["outgroup","n.","외집단","They liked these antisocial ingroup members less than the prosocial members of an outgroup.","Q34"],["antisocial","adj.","반사회적인","They disliked those who behaved in an antisocial fashion.","Q34"],["prosocial","adj.","친사회적인","They liked these antisocial ingroup members less than the prosocial members of an outgroup.","Q34"],["overimitation","n.","과잉 모방","This overimitation reveals that we are not copying in order to learn how to open a box most efficiently.","Q34"],["conform to","phrasal v.","~에 순응하다, 따르다","We want to learn how to do it in the proper way — conforming to the rules and conventions of the ingroup.","Q34"],["set point","n. phrase","설정점","The 'set point theory' concept is that your body has a stable quantity of fat cells by the time you are an adult.","Q35"],["stable","adj.","안정적인","Your body has a stable quantity of fat cells by the time you are an adult.","Q35"],["trigger","n.","방아쇠, 유발 요인","The set point is the trigger in these cells that will send a message to your brain.","Q35"],["release","v.","방출하다","Some researchers report that fat cells can release hormones and other chemicals.","Q35"],["hormone","n.","호르몬","Fat cells can release hormones and other chemicals that could help treat a disease.","Q35"],["catchphrase","n.","유행어, 슬로건","Initially the catchphrase 'less is more' had a simple meaning.","Q36"],["extinguish","v.","소멸시키다","The way of thinking that lies behind these words slowly extinguishes certain habits from our daily life.","Q36"],["massive","adj.","거대한, 육중한","Think about the heavy, massive radio receivers that existed back in the day.","Q36"],["reduction","n.","감소, 축소","With each reduction these devices eventually developed into the phones in our pockets.","Q36"],["multilayered","adj.","다층적인","The functions of the buttons got lost in the three-dot menus and multilayered folders of our phones.","Q36"],["sustainably","adv.","지속 가능하게","Before plastic, people lived more sustainably, with far fewer waste problems than we face today.","Q37"],["adoption","n.","채택, 도입","After the invention of plastic, its rapid adoption during World War II.","Q37"],["prosperity","n.","번영","The growing industry came to symbolize the convenience and prosperity of the American dream.","Q37"],["environmental impact","n. phrase","환경적 영향","Over time, people began to notice the environmental impact.","Q37"],["campaign","n.","캠페인","The plastics industry was quick to counter these concerns, launching campaigns that presented recycling as the solution.","Q37"],["corporation","n.","기업, 법인","Pollution was the fault of consumers, not the corporations flooding the market with plastic.","Q37"],["fault","n.","잘못, 책임","They pushed the idea that pollution was the fault of consumers.","Q37"],["paradigm","n.","패러다임","Our propositions about the world are embedded within paradigms.","Q38"],["embedded","adj.","깊이 박힌, 내재된","Our propositions about the world are embedded within paradigms.","Q38"],["interrelated","adj.","서로 연관된","A network of interrelated commitments to a particular theory.","Q38"],["methodological","adj.","방법론적인","A network of interrelated commitments to a particular theory, a conception of a subject matter, and methodological practices.","Q38"],["undertake","v.","착수하다, 맡다","When scientists undertake research, they do so from within a specific paradigm.","Q38"],["horizontal","adj.","수평적인","Rather, it is a horizontal shift from one 'way of seeing the world' to another.","Q38"],["harvest","n.","수확","Making two visits to one of our cold greenhouses provides a striking introduction to the winter harvest.","Q39"],["striking","adj.","인상적인, 두드러진","Making two visits to one of our cold greenhouses provides a striking introduction to the winter harvest.","Q39"],["frozen solid","adj. phrase","꽁꽁 얼어붙은","During the dawn visit all the crops are frozen solid.","Q39"],["miraculous","adj.","기적적인","A few hours later, after the sun has warmed the greenhouses above freezing, the second visit presents a miraculous contrast.","Q39"],["vigorous","adj.","생기 넘치는, 힘찬","Under the inner covers are closely spaced rows of vigorous, healthy leaves.","Q39"],["maroon","n.","암적색, 밤색","The leaf colors in different shades of greens, reds, maroons, and yellows stand bright against the dark soil.","Q39"],["independence","n.","독립심","Parenting experts say children need to learn independence and resilience.","Q40"],["resilience","n.","회복 탄력성","Parenting experts say children need to learn independence and resilience.","Q40"],["navigate","v.","헤쳐 나가다, 처리하다","All of those 'musts' take more of the parents' time or money to navigate.","Q40"],["tolerance","n.","관용, 허용","We need to 'build back our tolerance for children in public spaces.'","Q40"],["supervised","adj.","감독받는","Create safe environments where lightly supervised kids can move around freely.","Q40"],["structural","adj.","구조적인","Underparenting requires structural change.","Q40"],["prospect","n.","가능성, 전망","The prospect of doing anything that you've been told will require patience simply seems unattractive.","Q41-42"],["virtue","n.","미덕","It is the virtue that has traditionally been urged upon housewives.","Q41-42"],["promote","v.","승진시키다, 촉진하다","The talented but self-effacing employee who 'waits patiently' for a promotion.","Q41-42"],["accommodate","v.","적응시키다, 수용하다","Patience is a way of psychologically accommodating yourself to a lack of power.","Q41-42"],["accelerate","v.","가속화하다","But as society accelerates, something shifts.","Q41-42"],["capacity","n.","능력, 역량","The capacity to feed the urge to hurry — to allow things to take the time they take.","Q41-42"],["fulfillment","n.","성취감, 만족감","Instead of putting off all your fulfillment to the future.","Q41-42"],["derive","v.","얻다, 끌어내다","To do the work that counts, and to derive satisfaction from the doing itself.","Q41-42"],["sage","n.","현자, 성인","One day, a sage was traveling with his disciple through the capital of a prosperous kingdom.","Q43-45"],["disciple","n.","제자","A sage was traveling with his disciple through the capital of a prosperous kingdom.","Q43-45"],["prosperous","adj.","번영하는","A sage was traveling with his disciple through the capital of a prosperous kingdom.","Q43-45"],["genuine","adj.","진짜의, 진정한","The two men searched the streets, but found no one in genuine need of the coin.","Q43-45"],["puzzled","adj.","당혹스러운","The king, puzzled and slightly annoyed at what he did, asked.","Q43-45"],["content","adj.","만족한","Everyone I met seemed content and lacked any urgent need.","Q43-45"],["urgent","adj.","긴급한","Everyone I met seemed content and lacked any urgent need.","Q43-45"],["conquer","v.","정복하다","Seeking to conquer more.","Q43-45"],["contentment","n.","만족, 자족","He realized that his hunger for more had made him forget the value of contentment.","Q43-45"],["call off","phrasal v.","취소하다","The king called off the invasion and chose to appreciate what he already had.","Q43-45"],["invasion","n.","침략","The king called off the invasion and chose to appreciate what he already had.","Q43-45"],["appreciate","v.","소중히 여기다, 감사하다","The king called off the invasion and chose to appreciate what he already had.","Q43-45"]];
+
+var KO_SENT={"Thank you for your interest in the upcoming reopening of the center.": "센터의 다가오는 재개장에 관심을 가져 주셔서 감사합니다.", "Unfortunately, during the repair process, unexpected electrical issues were discovered.": "안타깝게도 수리 과정에서 예상치 못한 전기 문제가 발견되었습니다.", "Unexpected electrical issues were discovered, causing the work to take longer than we planned.": "예상치 못한 전기 문제가 발견되어 작업이 계획보다 더 오래 걸리게 되었습니다.", "We regret to inform you that the center's reopening must be delayed.": "센터의 재개장이 연기되어야 함을 알려드리게 되어 유감입니다.", "It will now reopen on May 1st to ensure the safety of all members.": "모든 회원의 안전을 보장하기 위해 이제 5월 1일에 재개장할 예정입니다.", "Thank you for your patience and understanding.": "인내심과 이해에 감사드립니다.", "It was the first carnival for the four-year-old girl, Cassie.": "그것은 네 살 소녀 Cassie의 첫 번째 카니발이었다.", "She had been imagining colorful balloons and delicious candies for a long time.": "그녀는 오랫동안 형형색색의 풍선과 맛있는 사탕을 상상해 왔다.", "When she finally arrived at the carnival, the twinkling lights and music made her jump with joy.": "그녀가 마침내 카니발에 도착했을 때 반짝이는 불빛과 음악이 기쁨으로 뛰게 만들었다.", "The magician showed his tricks and she cheered with her family.": "마술사가 마술을 보여주었고 그녀는 가족과 함께 환호했다.", "But suddenly, she saw a lot of huge balloons in the parade coming towards her.": "갑자기 그녀는 퍼레이드에서 자신을 향해 다가오는 거대한 풍선들을 보았다.", "Cassie froze and dropped her cotton candy on the ground.": "Cassie는 굳어버려 솜사탕을 땅에 떨어뜨렸다.", "She thought they were too big, like monsters.": "그녀는 그것들이 괴물처럼 너무 크다고 생각했다.", "There is simply no better way to influence or stir an audience.": "청중에게 영향을 미치거나 감동을 주는 더 나은 방법은 없다.", "There is simply no better way to influence or stir an audience — instantly, powerfully, authentically.": "청중에게 즉각적이고 강력하며 진정성 있게 영향을 미치는 더 나은 방법은 없다.", "There is no better way to influence an audience than by opening up to them with a personal story or anecdote.": "개인적인 이야기나 일화로 청중에게 마음을 여는 것보다 더 나은 방법은 없다.", "I'm saying that you can share a key biographical detail.": "나는 당신이 핵심적인 개인 이력 세부 사항을 공유할 수 있다고 말하는 것이다.", "It is a tried-and-tested way of bonding with an audience of strangers.": "그것은 낯선 청중과 유대감을 형성하는 검증된 방법이다.", "Laying the groundwork for you to then persuade them.": "그런 다음 그들을 설득하기 위한 토대를 마련하는 것이다.", "By sharing a revealing story or a personal flaw, you allow audience members a way to identify with you.": "드러나는 이야기나 개인적인 결점을 공유함으로써 청중이 당신과 동질감을 느낄 수 있게 한다.", "We are now at a point of unprecedented genetic, cultural, and environmental power as a species.": "우리는 현재 종으로서 전례 없는 유전적 문화적 환경적 힘의 지점에 있다.", "Our decisions today have far-reaching impacts that place a responsibility on us to become good ancestors.": "오늘날 우리의 결정은 좋은 조상이 될 책임을 지게 하는 광범위한 영향을 미친다.", "We must not steal the shade from our descendants.": "우리는 후손들로부터 그늘을 빼앗아서는 안 된다.", "Leaders of the native North American Iroquois people created 'seven generation stewardship.'": "북미 원주민 이로쿼이족의 지도자들은 7세대 관리를 만들었다.", "Instructing people to consider the impact of every decision on their children.": "사람들에게 모든 결정이 자녀들에게 미치는 영향을 고려하도록 지시하는 것이다.", "To imagine the well-being of billions of people whose lives will be lived in the world we are currently making.": "우리가 현재 만들고 있는 세상에서 살아갈 수십억 명의 안녕을 상상하는 것이다.", "Taste preferences can be changed throughout our lives due to neuroplasticity, our brain's amazing adaptability.": "미각 선호도는 뇌의 놀라운 적응력인 신경 가소성으로 인해 평생 동안 바뀔 수 있다.", "There is far more flexibility in our food behaviors than most think, even as we age.": "나이가 들어도 우리의 식품 행동에는 대부분이 생각하는 것보다 훨씬 더 많은 유연성이 있다.", "Just as kids gradually learn to like nutritious foods, so, too, can adults readjust their taste.": "아이들이 서서히 영양 음식을 좋아하게 되는 것처럼 어른들도 입맛을 재조정할 수 있다.", "Repeated exposure — and a willingness to change — is the key.": "반복적인 노출과 변화하려는 의지가 핵심이다.", "Conformity in the teenage years has been studied by putting young people in situations.": "십대 시절의 순응은 젊은이들을 특정 상황에 놓음으로써 연구되어 왔다.", "The willingness to go along with others reaches a peak around the age of 14.": "다른 사람들을 따르려는 의지는 14세 전후에 정점에 달한다.", "After that, this tendency decreases, so that by 16 or 17, young people are much more able to disagree with the group.": "그 이후 이 경향은 감소하여 16세나 17세가 되면 집단에 훨씬 더 잘 반대할 수 있게 된다.", "It demonstrates that the influence of the peer group is not the same across all ages.": "그것은 또래 집단의 영향력이 모든 연령대에서 동일하지 않다는 것을 보여준다.", "As young people mature, they become more resilient, and more able to defend their opinions as individuals.": "젊은이들이 성숙해지면서 더 회복 탄력적이 되고 자신의 의견을 더 잘 지킬 수 있게 된다.", "Young people are much more able to disagree with the group and to stand up for their own opinion.": "젊은이들은 집단에 반대하고 자신의 의견을 지지할 능력이 훨씬 강해진다.", "Understanding how the brain uses habits, and how you can work with them, is essential for business.": "뇌가 습관을 어떻게 사용하는지 이해하는 것은 사업에 필수적이다.", "Would you do better by attaching to another one (known as temptation bundling)?": "다른 습관인 유혹 묶기에 연결하는 것이 더 나을까?", "Participants could only have access to their audio devices while at the gym.": "참가자들은 헬스장에 있는 동안에만 오디오 기기에 접근할 수 있었다.", "This uses a tempting habit and combines it with a habit people would like to build.": "이것은 유혹적인 습관을 구축하고 싶은 습관과 결합한다.", "Nearly two-thirds opted to pay to have gym-only access for their devices.": "거의 3분의 2가 기기에 헬스장 전용 접근권을 갖기 위해 비용을 지불하기로 선택했다.", "He received training that laid the foundation for his career.": "그는 자신의 경력의 토대를 마련한 훈련을 받았다.", "In the late 1970s, Graffman lost control of the fingers on his right hand.": "1970년대 후반에 Graffman은 오른손 손가락을 제어할 수 없게 되었다.", "He never gave up playing the piano.": "그는 피아노 연주를 결코 포기하지 않았다.", "Reconsidering the traditional piano performance convention of using both hands, he focused on works for the left hand alone.": "양손 사용 관습을 재고하며 그는 왼손만을 위한 작품에 집중했다.", "There he taught many outstanding young musicians, including Lang Lang.": "그곳에서 그는 랑랑을 포함한 많은 뛰어난 젊은 음악가들을 가르쳤다.", "His lifelong commitment to music continues to inspire people today.": "음악에 대한 그의 평생의 헌신은 오늘날에도 사람들에게 영감을 주고 있다.", "A conceptual model is an explanation, usually highly simplified, of how something works.": "개념적 모형은 무언가가 어떻게 작동하는지에 대한 단순화된 설명이다.", "It doesn't have to be complete or even accurate as long as it is useful.": "그것은 유용하기만 하면 완전하거나 정확할 필요가 없다.", "Those are effective conceptualizations designed to make them easier to use.": "그것들은 사용하기 쉽게 만들기 위해 설계된 효과적인 개념화이다.", "Sometimes these depictions can add to the confusion.": "때로는 이러한 묘사들이 혼란을 가중시킬 수 있다.", "The conceptual model is of one, coherent image.": "개념적 모형은 하나의 일관된 이미지이다.", "It may actually consist of parts, each located on different machines.": "그것은 실제로 각각 다른 기계에 위치한 부분들로 구성될 수 있다.", "The principal transportation mode in the developing world is still walking.": "개발도상국에서 주요 교통 수단은 여전히 걷기이다.", "Because of constraints on the resources needed to operate extensive transit systems.": "광범위한 대중교통 시스템 운영에 필요한 자원의 제약 때문이다.", "People cover long distances on foot every day and expend human energy that they can hardly spare.": "사람들은 매일 도보로 긴 거리를 이동하며 거의 아낄 수 없는 에너지를 소비한다.", "Walking under those conditions is an unavoidable burden.": "그러한 조건에서 걷기는 피할 수 없는 부담이다.", "Walking under those conditions is an unavoidable burden that consumes productive capability.": "그러한 조건에서 걷기는 생산적 역량을 소비하는 피할 수 없는 부담이다.", "In North America and Western Europe, walking is efficient, healthful, and natural.": "북미와 서유럽에서는 걷기가 효율적이고 건강에 좋으며 자연스럽다.", "Some of the current trends should be reversed.": "현재의 일부 추세는 역전되어야 한다.", "Treadmills simulate walking, which could be otherwise accomplished with a transport purpose on the street.": "러닝머신은 거리에서 교통 목적으로 달성될 수 있는 걷기를 모의 실험한다.", "They can feel overwhelmed by so much stuff.": "그들은 너무 많은 것들에 압도감을 느낄 수 있다.", "Streamlining a play space is so important.": "놀이 공간을 간소화하는 것은 매우 중요하다.", "You want your kids to feel inspired and imaginative in the room.": "당신은 아이들이 방에서 영감을 받고 상상력이 풍부하다고 느끼기를 원한다.", "Not overcome with indecision.": "우유부단함에 압도당하지 않도록.", "Students often mistake familiarity with true mastery.": "학생들은 종종 친숙함을 진정한 숙달과 혼동한다.", "Creating a dangerous 'illusion of competence.'": "위험한 능력의 착각을 만들어낸다.", "Recognizing information feels like genuine knowledge.": "정보를 인식하는 것이 진정한 지식처럼 느껴진다.", "This cognitive bias leads learners to overestimate their understanding.": "이 인지적 편향은 학습자들이 자신의 이해를 과대평가하게 만든다.", "Teaching materials actively counters this illusion.": "교재를 가르치는 것은 이 착각에 적극적으로 대항한다.", "It introduces powerful methods like teaching imaginary students, peer-teaching in study groups.": "가상의 학생 가르치기 동료 교수법 같은 강력한 방법을 소개한다.", "Exposing and filling gaps in knowledge.": "지식의 격차를 드러내고 채우는 것이다.", "They would represent five fish with a numeral for the number five alongside a symbol for the fish.": "그들은 물고기 기호 옆에 숫자 5로 다섯 마리의 물고기를 표현했다.", "Their first great intellectual leap came from separating the number from the object they were counting.": "그들의 첫 번째 지적 도약은 숫자를 사물로부터 분리하는 데서 비롯되었다.", "The Sumerians had developed the idea of an emancipated number, existing in its own right.": "수메르인들은 독자적으로 존재하는 해방된 숫자의 개념을 발전시켰다.", "It is easy to take the emancipated number for granted as it is so deeply set into modern thought.": "해방된 숫자는 현대 사상에 너무 깊이 자리 잡고 있어 당연하게 여기기 쉽다.", "To the earliest civilizations it was intellectually new and extremely powerful.": "가장 초기의 문명에게 그것은 지적으로 새롭고 매우 강력한 것이었다.", "The emphasis on learning from the ingroup takes little account of individuals.": "내집단으로부터 배우는 것에 대한 강조는 개인을 거의 고려하지 않는다.", "They liked these antisocial ingroup members less than the prosocial members of an outgroup.": "그들은 이 반사회적 내집단 구성원들을 외집단의 친사회적 구성원들보다 덜 좋아했다.", "They disliked those who behaved in an antisocial fashion.": "그들은 반사회적인 방식으로 행동하는 사람들을 싫어했다.", "This overimitation reveals that we are not copying in order to learn how to open a box most efficiently.": "이 과잉 모방은 우리가 상자를 가장 효율적으로 여는 방법을 배우기 위해 모방하는 것이 아님을 보여준다.", "We want to learn how to do it in the proper way — conforming to the rules and conventions of the ingroup.": "우리는 내집단의 규칙과 관습에 순응하는 올바른 방식으로 하는 방법을 배우고 싶다.", "The 'set point theory' concept is that your body has a stable quantity of fat cells by the time you are an adult.": "설정점 이론 개념은 성인이 될 때쯤 몸에 안정적인 양의 지방 세포가 있다는 것이다.", "Your body has a stable quantity of fat cells by the time you are an adult.": "성인이 될 때쯤 몸에 안정적인 양의 지방 세포가 있다.", "The set point is the trigger in these cells that will send a message to your brain.": "설정점은 뇌에 메시지를 보내는 이 세포들의 방아쇠이다.", "Some researchers report that fat cells can release hormones and other chemicals.": "일부 연구자들은 지방 세포가 호르몬과 다른 화학 물질을 방출할 수 있다고 보고한다.", "Fat cells can release hormones and other chemicals that could help treat a disease.": "지방 세포는 질병 치료에 도움이 될 수 있는 호르몬과 화학 물질을 방출할 수 있다.", "Initially the catchphrase 'less is more' had a simple meaning.": "처음에 적을수록 더 좋다라는 유행어는 단순한 의미를 가지고 있었다.", "The way of thinking that lies behind these words slowly extinguishes certain habits from our daily life.": "이 말들 뒤에 있는 사고방식은 서서히 우리 일상에서 특정 습관들을 소멸시킨다.", "Think about the heavy, massive radio receivers that existed back in the day.": "예전에 존재했던 무겁고 거대한 라디오 수신기를 생각해 보라.", "With each reduction these devices eventually developed into the phones in our pockets.": "각각의 축소와 함께 이 기기들은 결국 우리 주머니 속의 전화기로 발전했다.", "The functions of the buttons got lost in the three-dot menus and multilayered folders of our phones.": "버튼의 기능은 전화기의 세 점 메뉴와 다층 폴더 속에 사라졌다.", "Before plastic, people lived more sustainably, with far fewer waste problems than we face today.": "플라스틱 이전에 사람들은 오늘날보다 훨씬 적은 폐기물 문제로 더 지속 가능하게 살았다.", "After the invention of plastic, its rapid adoption during World War II.": "플라스틱의 발명 이후 2차 세계 대전 동안 그것의 빠른 채택.", "The growing industry came to symbolize the convenience and prosperity of the American dream.": "성장하는 산업은 아메리칸 드림의 편리함과 번영을 상징하게 되었다.", "Over time, people began to notice the environmental impact.": "시간이 지남에 따라 사람들은 환경적 영향을 알아차리기 시작했다.", "The plastics industry was quick to counter these concerns, launching campaigns that presented recycling as the solution.": "플라스틱 산업은 재활용을 해결책으로 제시하는 캠페인을 시작하며 빠르게 대응했다.", "Pollution was the fault of consumers, not the corporations flooding the market with plastic.": "오염은 플라스틱으로 시장을 범람시키는 기업들이 아니라 소비자들의 잘못이었다.", "They pushed the idea that pollution was the fault of consumers.": "그들은 오염이 소비자들의 잘못이라는 생각을 밀어붙였다.", "Our propositions about the world are embedded within paradigms.": "세상에 대한 우리의 명제들은 패러다임 안에 깊이 박혀 있다.", "A network of interrelated commitments to a particular theory.": "특정 이론에 대한 상호 연관된 헌신들의 네트워크.", "A network of interrelated commitments to a particular theory, a conception of a subject matter, and methodological practices.": "특정 이론 주제 개념 방법론적 실천에 대한 상호 연관된 헌신들의 네트워크.", "When scientists undertake research, they do so from within a specific paradigm.": "과학자들이 연구에 착수할 때 그들은 특정 패러다임 안에서 그렇게 한다.", "Rather, it is a horizontal shift from one 'way of seeing the world' to another.": "오히려 그것은 한 세상을 보는 방식에서 다른 방식으로의 수평적 이동이다.", "Making two visits to one of our cold greenhouses provides a striking introduction to the winter harvest.": "냉각 온실을 두 번 방문하는 것은 겨울 수확에 대한 인상적인 소개를 제공한다.", "During the dawn visit all the crops are frozen solid.": "새벽 방문 동안 모든 작물은 꽁꽁 얼어붙어 있다.", "A few hours later, after the sun has warmed the greenhouses above freezing, the second visit presents a miraculous contrast.": "몇 시간 후 태양이 온실을 영하 이상으로 데운 후 두 번째 방문은 기적적인 대조를 보여준다.", "Under the inner covers are closely spaced rows of vigorous, healthy leaves.": "내부 덮개 아래에는 생기 넘치고 건강한 잎들이 빽빽하게 줄지어 있다.", "The leaf colors in different shades of greens, reds, maroons, and yellows stand bright against the dark soil.": "다양한 색조의 잎 색깔들이 어두운 흙을 배경으로 밝게 빛난다.", "Parenting experts say children need to learn independence and resilience.": "양육 전문가들은 아이들이 독립심과 회복 탄력성을 배울 필요가 있다고 말한다.", "All of those 'musts' take more of the parents' time or money to navigate.": "그 필수 사항들 모두는 헤쳐 나가기 위해 부모의 더 많은 시간이나 돈을 필요로 한다.", "We need to 'build back our tolerance for children in public spaces.'": "우리는 공공장소에서 아이들에 대한 관용을 다시 쌓아야 한다.", "Create safe environments where lightly supervised kids can move around freely.": "가볍게 감독받는 아이들이 자유롭게 돌아다닐 수 있는 안전한 환경을 만들어라.", "Underparenting requires structural change.": "과소 양육은 구조적 변화를 필요로 한다.", "The prospect of doing anything that you've been told will require patience simply seems unattractive.": "인내심이 필요하다고 들은 무엇을 하는 것의 전망은 그저 매력 없어 보인다.", "It is the virtue that has traditionally been urged upon housewives.": "그것은 전통적으로 주부들에게 권고되어 온 미덕이다.", "The talented but self-effacing employee who 'waits patiently' for a promotion.": "승진을 인내심 있게 기다리는 재능 있지만 자기를 내세우지 않는 직원.", "Patience is a way of psychologically accommodating yourself to a lack of power.": "인내심은 권력의 부재에 심리적으로 자신을 적응시키는 방법이다.", "But as society accelerates, something shifts.": "그러나 사회가 가속화되면서 무언가가 변한다.", "The capacity to feed the urge to hurry — to allow things to take the time they take.": "서두르려는 충동을 억제하는 능력 즉 일들이 걸리는 시간만큼 걸리도록 허용하는 것.", "Instead of putting off all your fulfillment to the future.": "모든 성취감을 미래로 미루는 대신에.", "To do the work that counts, and to derive satisfaction from the doing itself.": "중요한 일을 하고 그 행위 자체에서 만족감을 얻는 것.", "One day, a sage was traveling with his disciple through the capital of a prosperous kingdom.": "어느 날 현자가 번영하는 왕국의 수도를 통해 제자와 함께 여행하고 있었다.", "A sage was traveling with his disciple through the capital of a prosperous kingdom.": "현자가 번영하는 왕국의 수도를 통해 제자와 함께 여행하고 있었다.", "The two men searched the streets, but found no one in genuine need of the coin.": "두 사람은 거리를 찾아보았지만 동전이 진정으로 필요한 사람을 찾지 못했다.", "The king, puzzled and slightly annoyed at what he did, asked.": "왕은 그가 한 행동에 당황스럽고 약간 불쾌해하며 물었다.", "Everyone I met seemed content and lacked any urgent need.": "내가 만난 모든 사람은 만족스러워 보였고 긴급한 필요가 없었다.", "Seeking to conquer more.": "더 많이 정복하려 하였다.", "He realized that his hunger for more had made him forget the value of contentment.": "그는 더 많은 것에 대한 욕망이 자족의 가치를 잊게 만들었다는 것을 깨달았다.", "The king called off the invasion and chose to appreciate what he already had.": "왕은 침략을 취소하고 이미 가진 것을 소중히 여기기로 했다.", "The above graph shows the top benefits of working from home, based on a 2023 global survey of over 20,000 workers.": "위의 그래프는 20000명 이상의 근로자를 대상으로 한 2023년 글로벌 설문 조사를 기반으로 재택근무의 주요 이점을 보여준다.", "The biggest benefit was 'No Commute,' chosen by just under 60 percent of respondents.": "가장 큰 이점은 응답자의 60% 미만이 선택한 통근 없음이었다.", "The percentage of respondents citing 'Individual Quiet Time' was lower than that of those who selected 'Spending More Time with Family and Friends.'": "개인 조용한 시간을 언급한 응답자의 비율은 가족 및 친구와 더 많은 시간 보내기를 선택한 비율보다 낮았다.", "The gap between the percentage of respondents who selected 'Fewer Meetings' and that of those who selected 'No Commute' was about 50 percentage points.": "더 적은 회의와 통근 없음 사이의 격차는 약 50퍼센트 포인트였다.", "If you are looking for a convenient parking option in our city, check out the Green Parking Pass!": "시내에서 편리한 주차 옵션을 찾고 있다면 그린 파킹 패스를 확인해 보세요!", "Basic type is available from 9 a.m. to 6 p.m.": "기본 타입은 오전 9시부터 오후 6시까지 이용 가능합니다.", "Premium type includes at any time + reserved parking space.": "프리미엄 타입은 언제든지 예약된 주차 공간을 포함합니다.", "The pass can be purchased online or at the city public parking offices.": "패스는 온라인이나 시 공영 주차장 사무소에서 구매할 수 있습니다.", "You'll write, direct, shoot, and edit your own project.": "당신은 자신의 프로젝트를 작성하고 감독하고 촬영하고 편집할 것입니다.", "You'll participate in online interactive classes with real-time instruction.": "당신은 실시간 지도가 있는 온라인 상호 작용 수업에 참여할 것입니다.", "You'll complete your own film to be screened at the end of the camp.": "당신은 캠프 끝에 상영될 자신만의 영화를 완성할 것입니다."};
+var DEFS={"upcoming": "happening or appearing soon", "repair": "the process of fixing something damaged", "unexpected": "not expected or anticipated", "electrical": "relating to electricity", "delay": "to make something happen later than planned", "regret": "to feel sorry about something", "ensure": "to make certain that something happens", "patience": "the ability to wait calmly", "carnival": "a public festival with entertainment", "imagine": "to form a picture in your mind", "twinkling": "shining with a flickering light", "magician": "a person who performs magic tricks", "parade": "a public procession through streets", "freeze": "to become suddenly still from shock", "monster": "a large frightening imaginary creature", "influence": "to have an effect on someone", "instantly": "immediately without any delay", "anecdote": "a short entertaining story about a real event", "biographical": "relating to the details of a person's life", "bond with": "to form a close relationship with someone", "persuade": "to convince someone to do something", "identify with": "to feel you share the same experiences", "flaw": "a weakness or imperfection", "reveal": "to make something known or visible", "unprecedented": "never having happened before", "responsibility": "a duty to deal with something", "ancestor": "a person from whom one is descended", "descendant": "a person who comes from a particular ancestor", "stewardship": "careful and responsible management", "consider": "to think carefully about something", "well-being": "the state of being comfortable and healthy", "neuroplasticity": "the brain's ability to change and adapt", "adaptability": "the ability to adjust to new conditions", "flexibility": "the ability to change or be changed easily", "preference": "a greater liking for one thing over another", "nutritious": "containing substances needed for good health", "gradually": "slowly and steadily over time", "readjust": "to adjust again to new conditions", "exposure": "the state of being subjected to something", "willingness": "readiness or eagerness to do something", "conformity": "behaviour that follows accepted rules", "peak": "the highest point or level", "tendency": "an inclination to behave in a particular way", "decrease": "to become smaller or fewer in number", "peer group": "a group of people of similar age and status", "mature": "to develop fully and become more responsible", "resilient": "able to recover quickly from difficulties", "defend": "to protect or support against criticism", "stand up for": "to speak in support of someone", "essential": "absolutely necessary and important", "temptation": "a strong desire to do something appealing", "bundle": "to combine or group things together", "participant": "a person who takes part in an activity", "access": "the ability or right to use something", "combine": "to join two or more things together", "opt to": "to choose to do something", "foundation": "the basis on which something is established", "lay the foundation for": "to create the basis for something", "lose control of": "to no longer be able to control something", "give up": "to stop trying to do something", "reconsider": "to think again about a previous decision", "convention": "an accepted way of doing things", "outstanding": "exceptionally good or remarkable", "commitment": "dedication to a cause or activity", "inspire": "to fill someone with the urge to do something", "conceptual": "relating to ideas or concepts", "simplified": "made simpler or easier to understand", "accurate": "correct and free from errors", "conceptualization": "the process of forming a concept", "confusion": "a state of not understanding clearly", "coherent": "logical and consistent", "consist of": "to be made up of particular parts", "transportation": "the means of moving people or goods", "constraint": "a limitation or restriction", "expend": "to use up a resource such as energy", "unavoidable": "impossible to prevent or avoid", "burden": "something difficult to carry or deal with", "efficient": "achieving maximum results with minimum waste", "reverse": "to change to the opposite direction", "simulate": "to imitate the character of something", "overwhelmed": "feeling unable to cope with something", "streamline": "to make something simpler and more efficient", "imaginative": "having or showing creativity", "indecision": "the inability to make a decision quickly", "mastery": "comprehensive knowledge or skill", "illusion": "a false idea or belief", "competence": "the ability to do something successfully", "genuine": "truly what it is claimed to be", "overestimate": "to estimate something as higher than it is", "counter": "to oppose or argue against something", "peer-teaching": "a method where students teach others", "expose": "to reveal or uncover something hidden", "numeral": "a symbol representing a number", "represent": "to be a sign or symbol of something", "intellectual": "relating to the ability to think", "leap": "a large jump or sudden transition", "emancipated": "freed from restriction or control", "take for granted": "to fail to appreciate the value of something", "civilization": "a developed human society with culture", "ingroup": "a group that one belongs to", "outgroup": "a group that one does not belong to", "antisocial": "behaving in a way harmful to others", "prosocial": "relating to behaviour that benefits others", "overimitation": "copying behaviour beyond what is necessary", "conform to": "to behave according to accepted rules", "set point": "the level the body tries to maintain", "stable": "not likely to change or move", "trigger": "something that causes a reaction", "release": "to allow something to flow or escape", "hormone": "a chemical substance produced in the body", "catchphrase": "a well-known phrase associated with something", "extinguish": "to cause something to stop existing", "massive": "very large in size or amount", "reduction": "the act of making something smaller", "multilayered": "having many levels or layers", "sustainably": "in a way that can be maintained long-term", "adoption": "the act of taking something up and using it", "prosperity": "the state of being successful and wealthy", "environmental impact": "the effect of activities on the environment", "campaign": "an organised series of actions toward a goal", "corporation": "a large company or group of companies", "fault": "responsibility for a mistake or problem", "paradigm": "a typical example or pattern", "embedded": "fixed firmly and deeply in something", "interrelated": "connected and affecting each other", "methodological": "relating to the methods used in a subject", "undertake": "to commit to and begin a task", "horizontal": "parallel to the ground, not vertical", "harvest": "the process of gathering crops", "striking": "attracting attention by being impressive", "frozen solid": "completely frozen and hard", "miraculous": "surprisingly wonderful and extraordinary", "vigorous": "strong, healthy and full of energy", "maroon": "a dark brownish-red colour", "independence": "freedom from the control of others", "resilience": "the ability to recover from difficulties", "navigate": "to find a way through a difficult situation", "tolerance": "the willingness to accept something different", "supervised": "watched over and directed by someone", "structural": "relating to the way something is organised", "prospect": "the possibility of something happening", "virtue": "a quality considered morally good", "promote": "to move someone to a higher rank", "accommodate": "to adapt to new conditions", "accelerate": "to move faster or happen more quickly", "capacity": "the ability or power to do something", "fulfillment": "the achievement of something desired", "derive": "to obtain something from a source", "sage": "a very wise person", "disciple": "a follower and student of a teacher", "prosperous": "successful especially in financial terms", "puzzled": "confused and unsure about something", "content": "satisfied and happy with one's situation", "urgent": "requiring immediate action or attention", "conquer": "to overcome and take control of something", "contentment": "a state of happiness and satisfaction", "call off": "to cancel something that was planned", "invasion": "an instance of entering with hostile intent", "appreciate": "to recognise the worth of something", "survey": "a study that collects data from a group", "respondent": "a person who answers a survey", "commute": "the journey between home and work", "cite": "to mention as an example or reason", "gap": "a difference or space between two things", "convenient": "easy to use or requiring little effort", "available": "able to be used or obtained", "reserved": "kept for a particular person or purpose", "purchase": "to buy something", "direct": "to supervise the making of a film", "edit": "to prepare filmed material for publishing", "interactive": "allowing communication between user and system", "instruction": "directions or teaching given to someone", "screen": "to show a film to an audience"};
+
+
+// ── POS TAGGER for Easy Scramble ──────────────────────────────────
+var POS_COLORS = {
+  'noun':  {bg:'#DBEAFE', border:'#3B82F6', color:'#1E3A8A', label:'Noun'},
+  'verb':  {bg:'#DCFCE7', border:'#22C55E', color:'#14532D', label:'Verb'},
+  'adj':   {bg:'#FEF3C7', border:'#F59E0B', color:'#78350F', label:'Adj/Adv'},
+  'other': {bg:'#F1F5F9', border:'#94A3B8', color:'#334155', label:'Other'}
+};
+
+// Simple rule-based POS tagger for individual tokens
+function tagToken(token) {
+  var t = token.toLowerCase().replace(/[.,!?;:'"()]/g,'');
+  // punctuation / articles / prepositions / conjunctions → other
+  if(/^[.,!?;:'"()\-]+$/.test(token)) return 'other';
+  if(/^(a|an|the|this|that|these|those|it|its|they|their|we|our|you|your|he|his|she|her|i|my)$/.test(t)) return 'other';
+  if(/^(in|on|at|to|for|of|from|with|by|as|into|onto|upon|about|over|under|through|between|among|across|along|around|behind|before|after|during|within|without|against|toward|towards|per|via|near|since|until|up|down|off|out|over|past|around)$/.test(t)) return 'other';
+  if(/^(and|or|but|so|yet|nor|although|because|since|while|if|when|where|that|which|who|whom|whose|what|how|whether|than|as|both|either|neither|not|also|however|therefore|thus|moreover|furthermore|nevertheless|meanwhile|instead|otherwise)$/.test(t)) return 'other';
+  if(/^(is|are|was|were|be|been|being|have|has|had|having|do|does|did|will|would|shall|should|may|might|must|can|could|need|dare|ought|used)$/.test(t)) return 'verb';
+  // verb endings
+  if(/(?:ing|ed|ize|ise|ify|en|ate)$/.test(t) && t.length > 4) return 'verb';
+  if(/(?:s|es)$/.test(t) && t.length > 3 && !/(?:ness|ness|ous|ful|less|ive|al|ic|ical|able|ible|ary|ory|ery)$/.test(t)) return 'verb';
+  // adjective/adverb endings
+  if(/(?:ly|ful|less|ous|ive|al|ical|able|ible|ary|ory|ent|ant|ish|like|ward|wise|ary|ic)$/.test(t)) return 'adj';
+  // noun endings
+  if(/(?:tion|sion|ment|ness|ity|ance|ence|ship|hood|dom|ism|ist|er|or|ure|age|ure|ary|ery|ory|ing)$/.test(t) && t.length > 4) return 'noun';
+  // Capitalised mid-sentence = proper noun
+  if(/^[A-Z]/.test(token) && token !== token.toUpperCase()) return 'noun';
+  return 'noun'; // default to noun
+}
+
+
+// ── CHUNK COLOURS ───────────────────────────────────────────────────
+var CHUNK_PALETTE = [
+  {bg:'#DBEAFE',border:'#3B82F6',color:'#1E3A8A'},
+  {bg:'#DCFCE7',border:'#22C55E',color:'#14532D'},
+  {bg:'#FEF3C7',border:'#F59E0B',color:'#78350F'},
+  {bg:'#FCE7F3',border:'#EC4899',color:'#831843'},
+  {bg:'#EDE9FE',border:'#8B5CF6',color:'#3B0764'},
+  {bg:'#FFEDD5',border:'#F97316',color:'#7C2D12'},
+  {bg:'#CFFAFE',border:'#06B6D4',color:'#164E63'},
+  {bg:'#F0FDF4',border:'#4ADE80',color:'#166534'},
+];
+
+// ── CHUNKER — splits sentence into meaningful phrase groups ─────────
+function chunkSentence(sentence){
+  var words = sentence.split(' ');
+  var chunks = [];
+  var i = 0;
+  while(i < words.length){
+    var w = words[i];
+    var wl = w.toLowerCase().replace(/[.,!?;:'"()]/g,'');
+    // Articles/determiners start a noun chunk → grab 2-3 words
+    if(/^(a|an|the|this|that|these|those|my|your|his|her|its|our|their|no|every|each|any|some)$/.test(wl)){
+      var chunk=[w];
+      if(i+1<words.length) chunk.push(words[i+1]);
+      // optionally grab one more if next-next is adj/noun
+      if(i+2<words.length){
+        var nx=words[i+2].toLowerCase().replace(/[.,!?;:'"()]/g,'');
+        if(!/^(is|are|was|were|be|have|has|had|will|would|can|could|should|may|might|must|to|that|which|who|in|on|at|of|by|from|with|for|and|or|but|,|.)$/.test(nx)){
+          chunk.push(words[i+2]);
+          i+=3;
+        } else { i+=2; }
+      } else { i+=2; }
+      chunks.push(chunk.join(' '));
+    }
+    // Prepositions → grab preposition + next 1-2 words
+    else if(/^(in|on|at|to|for|of|from|with|by|into|onto|about|over|under|through|between|among|across|along|around|behind|before|after|during|without|against|toward|towards|near|since|until|up|down|off|out|past|despite|through)$/.test(wl)){
+      var chunk=[w];
+      if(i+1<words.length) chunk.push(words[i+1]);
+      if(i+2<words.length){
+        var nx2=words[i+2].toLowerCase().replace(/[.,!?;:'"()]/g,'');
+        if(!/^(in|on|at|to|for|of|from|with|by|and|or|but|,|.|that|which|who|is|are|was|were|will|would|can|could|should|may|might|must)$/.test(nx2)){
+          chunk.push(words[i+2]);
+          i+=3;
+        } else { i+=2; }
+      } else { i+=2; }
+      chunks.push(chunk.join(' '));
+    }
+    // Aux verbs → group with main verb
+    else if(/^(is|are|was|were|be|been|being|have|has|had|will|would|shall|should|may|might|must|can|could|do|does|did|not|never|also|often|usually|always|sometimes|never)$/.test(wl)){
+      var chunk=[w];
+      if(i+1<words.length) chunk.push(words[i+1]);
+      i+=2;
+      chunks.push(chunk.join(' '));
+    }
+    // Infinitive 'to' → group with verb
+    else if(wl==='to' && i+1<words.length){
+      chunks.push(w+' '+words[i+1]);
+      i+=2;
+    }
+    // Conjunction/comma → standalone
+    else if(/^[,.]$/.test(w)||/^(and|or|but|so|yet|although|because|since|while|if|when|where|that|which|who|whom|whose|what|how|whether|than|as|both|either|neither|however|therefore|thus|moreover|furthermore|nevertheless|meanwhile|instead|otherwise|—|-)$/.test(wl)){
+      // attach to previous chunk if possible
+      if(chunks.length>0 && /^[,.]$/.test(w)){
+        chunks[chunks.length-1]+=w;
+      } else {
+        chunks.push(w);
+      }
+      i++;
+    }
+    // Default: standalone word (verb, adjective, adverb, unknown)
+    else {
+      // try to grab next word if it's an adverb or adjective modifier
+      if(i+1<words.length){
+        var nx3=words[i+1].toLowerCase().replace(/[.,!?;:'"()]/g,'');
+        if(/(?:ly|fully|lessly|ingly)$/.test(nx3) || /^(very|quite|rather|fairly|pretty|extremely|highly|deeply|truly|really|absolutely|completely|totally|largely|mostly|mainly|especially|particularly|significantly|considerably|increasingly)$/.test(nx3)){
+          chunks.push(w+' '+words[i+1]);
+          i+=2;
+        } else {
+          chunks.push(w);
+          i++;
+        }
+      } else {
+        chunks.push(w);
+        i++;
+      }
+    }
+  }
+  // Safety: if too few chunks (<3), fall back to 2-3 word groups
+  if(chunks.length < 3){
+    chunks=[];
+    for(var j=0;j<words.length;j+=2){
+      if(j+1<words.length) chunks.push(words[j]+' '+words[j+1]);
+      else chunks.push(words[j]);
+    }
+  }
+  return chunks;
+}
+
+// ─── STATE ─────────────────────────────────────
+var ALL_Q=[...new Set(WL.map(function(w){return w[4];}))].sort(function(a,b){
+  return parseInt(a.replace(/\D/g,''))-parseInt(b.replace(/\D/g,''));
+});
+var tSel=new Set(), sSel=new Set();
+var quizWords=[], answered={}, correct=0, wrong=0, quizMode='mc';
+
+// ─── TABS ───────────────────────────────────────
+document.getElementById('tab-btn-teacher').addEventListener('click',function(){
+  document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  this.classList.add('active');
+  document.getElementById('panel-teacher').classList.add('active');
+});
+document.getElementById('tab-btn-student').addEventListener('click',function(){
+  document.querySelectorAll('.nav-tab').forEach(function(b){b.classList.remove('active');});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active');});
+  this.classList.add('active');
+  document.getElementById('panel-student').classList.add('active');
+});
+
+// ─── BUILD Q GRIDS ──────────────────────────────
+function buildGrid(containerId, selSet, ctrId){
+  var g=document.getElementById(containerId);
+  ALL_Q.forEach(function(q){
+    var b=document.createElement('button');
+    b.className='qbtn';
+    b.textContent=q;
+    b.addEventListener('click',function(){
+      b.classList.toggle('on');
+      if(selSet.has(q)) selSet.delete(q);
+      else selSet.add(q);
+      updateCtr(selSet, ctrId);
+    });
+    g.appendChild(b);
+  });
+}
+buildGrid('tq-grid', tSel, 'tq-ctr');
+buildGrid('sq-grid', sSel, 'sq-ctr');
+
+function updateCtr(sel, ctrId){
+  var n=WL.filter(function(w){return sel.has(w[4]);}).length;
+  var el=document.getElementById(ctrId);
+  el.innerHTML='<strong>'+n+'</strong> words from <strong>'+sel.size+'</strong> question(s)';
+}
+
+// Select/Clear all
+document.getElementById('tq-all').addEventListener('click',function(){
+  document.querySelectorAll('#tq-grid .qbtn').forEach(function(b){b.classList.add('on');tSel.add(b.textContent);});
+  updateCtr(tSel,'tq-ctr');
+});
+document.getElementById('tq-clr').addEventListener('click',function(){
+  document.querySelectorAll('#tq-grid .qbtn').forEach(function(b){b.classList.remove('on');});
+  tSel.clear(); updateCtr(tSel,'tq-ctr');
+});
+document.getElementById('sq-all').addEventListener('click',function(){
+  document.querySelectorAll('#sq-grid .qbtn').forEach(function(b){b.classList.add('on');sSel.add(b.textContent);});
+  updateCtr(sSel,'sq-ctr');
+});
+document.getElementById('sq-clr').addEventListener('click',function(){
+  document.querySelectorAll('#sq-grid .qbtn').forEach(function(b){b.classList.remove('on');});
+  sSel.clear(); updateCtr(sSel,'sq-ctr');
+});
+
+// ─── HELPERS ───────────────────────────────────
+function shuffle(a){
+  var b=[].concat(a);
+  for(var i=b.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1));var t=b[i];b[i]=b[j];b[j]=t;}
+  return b;
+}
+function makeFill(word, sentence){
+  // First try exact match (case-insensitive)
+  var clean=word.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+  var re=new RegExp(clean,'i');
+  if(re.test(sentence)) return sentence.replace(re,'________');
+
+  // For phrasal verbs/idioms: try matching the key content words
+  // e.g. "be committed to" → try "committed to"
+  //      "be rooted in"    → try "rooted in"
+  //      "be familiar with"→ try "familiar with"
+  var stripped=word.replace(/^(be|get|make|have|do|feel|come|go|take|give|put|set|bring|keep|let|turn|look|run|fall|hold|stand|stay|become|seem|appear)\s+/i,'');
+  if(stripped!==word){
+    var re2=new RegExp(stripped.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'i');
+    if(re2.test(sentence)) return sentence.replace(re2,'________');
+  }
+
+  // Try matching just the first key word of multi-word phrases
+  var firstWord=word.split(' ')[0];
+  if(firstWord.length>3){
+    var re3=new RegExp('\\b'+firstWord.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\w*\\b','i');
+    if(re3.test(sentence)) return sentence.replace(re3,'________');
+  }
+
+  // Last resort: show sentence with hint in brackets
+  return sentence+' ['+word+']';
+}
+function showStatus(id, msg, cls){
+  var el=document.getElementById(id);
+  el.textContent=msg; el.className='st '+cls; el.style.display='block';
+}
+function getDecoys(correctKo, count){
+  var pool=WL.filter(function(w){return w[2]!==correctKo;}).map(function(w){return w[2];});
+  return shuffle(pool).slice(0,count||3);
+}
+function getWordDecoys(correctWord, count){
+  var pool=WL.filter(function(w){return w[0]!==correctWord;}).map(function(w){return w[0];});
+  return shuffle(pool).slice(0,count||3);
+}
+
+// ─── TEACHER ───────────────────────────────────
+function tGetWords(){
+  var w=WL.filter(function(x){return tSel.has(x[4]);});
+  return document.getElementById('t-sh').checked?shuffle(w):w;
+}
+
+document.getElementById('t-prev-btn').addEventListener('click',function(){
+  var words=tGetWords();
+  if(!words.length){showStatus('t-status','Please select at least one question.','er');return;}
+  var oKo=document.getElementById('t-ko').checked;
+  var oEn=document.getElementById('t-en').checked;
+  var oFi=document.getElementById('t-fi').checked;
+  var oPo=document.getElementById('t-po').checked;
+  if(!oKo&&!oEn&&!oFi&&!oPo){showStatus('t-status','Select at least one quiz type.','er');return;}
+  var h='<table style="width:100%;border-collapse:collapse;"><tr style="background:var(--acc);color:#fff;">';
+  h+='<th style="padding:5px 7px;font-size:11px;">#</th><th style="padding:5px 7px;font-size:11px;">Q</th><th style="padding:5px 7px;font-size:11px;">Word</th>';
+  if(oKo) h+='<th style="padding:5px 7px;font-size:11px;">① Korean</th>';
+  if(oEn) h+='<th style="padding:5px 7px;font-size:11px;">② English</th>';
+  if(oFi) h+='<th style="padding:5px 7px;font-size:11px;">③ Fill-blank</th>';
+  if(oPo) h+='<th style="padding:5px 7px;font-size:11px;">④ POS</th>';
+  h+='</tr>';
+  words.slice(0,6).forEach(function(row,i){
+    var bg=i%2?'background:var(--sf2)':'';
+    h+='<tr style="'+bg+'"><td style="padding:4px 7px;">'+( i+1)+'</td>';
+    h+='<td style="padding:4px 7px;font-size:10px;font-weight:700;">'+row[4]+'</td>';
+    h+='<td style="padding:4px 7px;font-weight:600;">'+row[0]+'</td>';
+    if(oKo) h+='<td style="padding:4px 7px;color:var(--ink3);">___________</td>';
+    if(oEn) h+='<td style="padding:4px 7px;color:var(--ink3);">___________</td>';
+    if(oFi) h+='<td style="padding:4px 7px;font-size:11px;color:var(--ink2);">'+makeFill(row[0],row[3]).substring(0,55)+'...</td>';
+    if(oPo) h+='<td style="padding:4px 7px;color:var(--ink3);">___________</td>';
+    h+='</tr>';
+  });
+  if(words.length>6) h+='<tr><td colspan="10" style="padding:4px 7px;color:var(--ink3);font-size:11px;">...and '+(words.length-6)+' more</td></tr>';
+  h+='</table>';
+  document.getElementById('t-preview').innerHTML=h;
+  showStatus('t-status','Preview: '+words.length+' words from '+[...tSel].join(', '),'ok');
+});
+
+document.getElementById('t-gen-btn').addEventListener('click',function(){
+  var words=tGetWords();
+  if(!words.length){showStatus('t-status','Please select at least one question.','er');return;}
+  var oKo=document.getElementById('t-ko').checked;
+  var oEn=document.getElementById('t-en').checked;
+  var oFi=document.getElementById('t-fi').checked;
+  var oPo=document.getElementById('t-po').checked;
+  var oKy=document.getElementById('t-ky').checked;
+  var cls=document.getElementById('t-cls').value||'';
+  if(!oKo&&!oEn&&!oFi&&!oPo){showStatus('t-status','Select at least one quiz type.','er');return;}
+  var wb=XLSX.utils.book_new();
+  var qLabel=[...tSel].sort().join(', ');
+  var today=new Date().toISOString().slice(0,10);
+  var qs=[
+    ['2026학년도 3월 고1 영어 학력평가 — Vocabulary Quiz'],
+    ['Questions: '+qLabel+'   |   Total: '+words.length+' words   |   Date: '+today+(cls?' | Class: '+cls:'')],
+    ['Name:','','Score:','/ '+words.length*[oKo,oEn,oFi,oPo].filter(Boolean).length],
+    []
+  ];
+  var hdr=['#','Source','Word / Phrase'];
+  if(oKo) hdr.push('① Korean meaning (한국어 뜻)');
+  if(oEn) hdr.push('② English word (영어 단어)');
+  if(oFi) hdr.push('③ Fill in the blank (빈칸 채우기)');
+  if(oPo) hdr.push('④ Part of speech (품사)');
+  qs.push(hdr);
+  words.forEach(function(w,i){
+    var row=[i+1,w[4],w[0]];
+    if(oKo) row.push('');
+    if(oEn) row.push('');
+    if(oFi) row.push(makeFill(w[0],w[3]));
+    if(oPo) row.push('');
+    qs.push(row);
+  });
+  var wsQ=XLSX.utils.aoa_to_sheet(qs);
+  var wc=[{wch:4},{wch:9},{wch:28}];
+  if(oKo) wc.push({wch:28}); if(oEn) wc.push({wch:28}); if(oFi) wc.push({wch:60}); if(oPo) wc.push({wch:18});
+  wsQ['!cols']=wc;
+  XLSX.utils.book_append_sheet(wb,wsQ,'Quiz');
+  if(oKy){
+    var ks=[['ANSWER KEY — 2026학년도 3월 고2 영어'],['Questions: '+qLabel+'   |   '+words.length+' words'],[]];
+    var kh=['#','Q','Word','POS'];
+    if(oKo) kh.push('① Korean'); if(oEn) kh.push('② English'); if(oFi) kh.push('③ Fill answer'); if(oPo) kh.push('④ POS');
+    ks.push(kh);
+    words.forEach(function(w,i){
+      var r=[i+1,w[4],w[0],w[1]];
+      if(oKo) r.push(w[2]); if(oEn) r.push(w[0]); if(oFi) r.push(w[0]); if(oPo) r.push(w[1]);
+      ks.push(r);
+    });
+    ks.push([]); ks.push(['— Example Sentences —']);
+    words.forEach(function(w,i){ks.push([i+1,w[0],w[3]]);});
+    var wsK=XLSX.utils.aoa_to_sheet(ks);
+    wsK['!cols']=[{wch:4},{wch:9},{wch:28},{wch:14},{wch:30},{wch:30},{wch:60},{wch:18}];
+    XLSX.utils.book_append_sheet(wb,wsK,'Answer Key');
+  }
+  var rs=[['Word Reference'],[], ['#','Q','Word','POS','Korean','Example Sentence']];
+  words.forEach(function(w,i){rs.push([i+1,w[4],w[0],w[1],w[2],w[3]]);});
+  var wsR=XLSX.utils.aoa_to_sheet(rs);
+  wsR['!cols']=[{wch:4},{wch:9},{wch:28},{wch:14},{wch:30},{wch:70}];
+  XLSX.utils.book_append_sheet(wb,wsR,'Word Reference');
+  var fname='vocab_quiz_'+qLabel.replace(/,\s*/g,'+')+'_'+today+'.xlsx';
+  XLSX.writeFile(wb,fname);
+  showStatus('t-status','Downloaded: '+fname+' ('+words.length+' words)','ok');
+});
+
+// ─── STUDENT: MODE SELECT ──────────────────────
+['mc','fi','w1','w2','scr','scr2','scr3'].forEach(function(m){
+  var el=document.getElementById('mode-'+m);
+  if(!el) return;
+  el.addEventListener('click',function(e){
+    e.stopPropagation(); // prevent cat card toggle
+    quizMode=m;
+    ['mc','fi','w1','w2','scr','scr2','scr3'].forEach(function(id){
+      var el2=document.getElementById('mode-'+id);
+      if(el2) el2.classList.toggle('sel',id===m);
+    });
+  });
+});
+
+function toggleCat(cat){
+  var body=document.getElementById('body-'+cat);
+  var arrow=document.getElementById('arrow-'+cat);
+  var card=document.getElementById('cat-'+cat);
+  var isOpen=body.style.display!=='none';
+  body.style.display=isOpen?'none':'block';
+  arrow.textContent=isOpen?'▶':'▼';
+  card.classList.toggle('cat-active',!isOpen);
+}
+
+// Open vocab category by default
+toggleCat('vocab');
+
+// ─── STUDENT: START ────────────────────────────
+document.getElementById('s-start').addEventListener('click',function(){
+  var words=WL.filter(function(w){return sSel.has(w[4]);});
+  if(words.length<4){showStatus('s-status','Please select at least 4 words (needed for multiple choice).','er');return;}
+  if(document.getElementById('s-sh').checked) words=shuffle(words);
+  quizWords=words;
+  answered={}; correct=0; wrong=0;
+  document.getElementById('s-setup').style.display='none';
+  document.getElementById('s-quiz').style.display='block';
+  document.getElementById('s-score').style.display='none';
+  updateLive();
+  renderQuiz();
+});
+
+function updateLive(){
+  var total=quizWords.length, done=correct+wrong;
+  document.getElementById('ls-c').textContent=correct;
+  document.getElementById('ls-w').textContent=wrong;
+  document.getElementById('ls-r').textContent=total-done;
+  document.getElementById('ls-p').textContent=done>0?Math.round(correct/done*100)+'%':'—';
+  document.getElementById('prog').style.width=(total>0?done/total*100:0)+'%';
+}
+
+// ─── RENDER QUIZ ───────────────────────────────
+function renderQuiz(){
+  var c=document.getElementById('q-container');
+  c.innerHTML='';
+  quizWords.forEach(function(w,i){
+    c.appendChild(makeQCard(w,i));
+  });
+}
+
+function makeQCard(w,idx){
+  var word=w[0],pos=w[1],ko=w[2],ex=w[3],q=w[4];
+  var div=document.createElement('div');
+  div.className='qcard';
+  div.id='card_'+idx;
+
+  // determine type
+  var type;
+  if(quizMode==='mc') type='mc_ko';
+  else if(quizMode==='fi') type='fill';
+  else if(quizMode==='w1') type='write_ko';
+  else if(quizMode==='w2') type='write_def';
+  else if(quizMode==='scr') type='scramble';
+  else if(quizMode==='scr2') type='scramble2';
+  else if(quizMode==='scr3') type='scramble3';
+  else type='mc_ko';
+
+  // meta
+  var meta='<div class="qmeta">';
+  meta+='<span class="qnum">Q'+(idx+1)+'/'+quizWords.length+'</span>';
+  meta+='<span class="badge b'+q.replace('-','')+'">'+q+'</span>';
+  if(type==='mc_ko') meta+='<span class="tbadge">English → Korean</span>';
+  else if(type==='mc_en') meta+='<span class="tbadge">Korean → English</span>';
+  else if(type==='write_ko') meta+='<span class="tbadge">✍️ Korean → Type English</span>';
+  else if(type==='write_def') meta+='<span class="tbadge">✍️ Definition → Type English</span>';
+  else if(type==='scramble') meta+='<span class="tbadge">🔀 Scramble</span>';
+  else if(type==='scramble2') meta+='<span class="tbadge">🌈 Medium Scramble</span>';
+  else if(type==='scramble3') meta+='<span class="tbadge">🧩 Easy Chunks</span>';
+  else meta+='<span class="tbadge">Fill in the blank</span>';
+  meta+='</div>';
+  div.innerHTML=meta;
+
+  if(type==='mc_ko'){
+    var p=document.createElement('div');
+    p.className='qprompt';
+    p.textContent=word+' ('+pos+')';
+    div.appendChild(p);
+    // hints hidden before answer — shown in explanation after
+    var opts=shuffle([ko].concat(getDecoys(ko)));
+    var optDiv=document.createElement('div');
+    optDiv.className='opts';
+    opts.forEach(function(o,i){
+      var b=document.createElement('button');
+      b.className='obtn';
+      b.textContent=String.fromCharCode(65+i)+'. '+o;
+      b.addEventListener('click',(function(opt,btn,correctOpt){
+        return function(){
+          if(answered[idx]!==undefined) return;
+          answered[idx]=opt;
+          var ok=opt===correctOpt;
+          if(ok) correct++; else wrong++;
+          updateLive();
+          optDiv.querySelectorAll('.obtn').forEach(function(b2){
+            b2.disabled=true;
+            var text=b2.textContent.slice(3);
+            if(text===correctOpt) b2.classList.add('correct');
+            else if(b2===btn&&!ok) b2.classList.add('wrong');
+          });
+          if(document.getElementById('s-rv').checked) showExpl(idx,word,ko,pos,ex);
+        };
+      })(o, b, ko));
+      optDiv.appendChild(b);
+    });
+    div.appendChild(optDiv);
+
+  } else if(type==='mc_en'){
+    var p2=document.createElement('div');
+    p2.className='qprompt';
+    p2.textContent=ko;
+    div.appendChild(p2);
+    // hints hidden before answer — shown in explanation after
+    var opts2=shuffle([word].concat(getWordDecoys(word)));
+    var optDiv2=document.createElement('div');
+    optDiv2.className='opts';
+    opts2.forEach(function(o,i){
+      var b=document.createElement('button');
+      b.className='obtn';
+      b.textContent=String.fromCharCode(65+i)+'. '+o;
+      b.addEventListener('click',(function(opt,btn,correctOpt){
+        return function(){
+          if(answered[idx]!==undefined) return;
+          answered[idx]=opt;
+          var ok=opt===correctOpt;
+          if(ok) correct++; else wrong++;
+          updateLive();
+          optDiv2.querySelectorAll('.obtn').forEach(function(b2){
+            b2.disabled=true;
+            var text=b2.textContent.slice(3);
+            if(text===correctOpt) b2.classList.add('correct');
+            else if(b2===btn&&!ok) b2.classList.add('wrong');
+          });
+          if(document.getElementById('s-rv').checked) showExpl(idx,word,ko,pos,ex);
+        };
+      })(o, b, word));
+      optDiv2.appendChild(b);
+    });
+    div.appendChild(optDiv2);
+
+  } else if(type==='write_ko'||type==='write_def'){
+    // Writing quiz: show Korean meaning OR English definition → type the English word
+    var wp=document.createElement('div');
+    wp.className='qprompt';
+    if(type==='write_ko'){
+      wp.textContent=ko;
+    } else {
+      wp.textContent=DEFS[word]?DEFS[word]:'(see example below)';
+    }
+    div.appendChild(wp);
+    // Show the other as a secondary hint
+    // secondary hint hidden before answer
+    // Example sentence hint (shown after wrong answer)
+    var wfrow=document.createElement('div');
+    wfrow.className='frow';
+    var winp=document.createElement('input');
+    winp.type='text';
+    winp.className='finp';
+    winp.id='fi_'+idx;
+    winp.placeholder='Type the English word...';
+    var wbtn=document.createElement('button');
+    wbtn.className='btn btn-s';
+    wbtn.textContent='Check';
+    var wfn=(function(input, correctWord, cardIdx, cardKo, cardPos, cardEx, row){
+      return function(){
+        if(answered[cardIdx]!==undefined) return;
+        var val=input.value.trim();
+        var ok=(val===correctWord);
+        answered[cardIdx]=val;
+        if(ok){correct++;input.classList.add('correct');}
+        else{wrong++;input.classList.add('wrong');}
+        input.disabled=true;
+        wbtn.disabled=true;
+        var ans=document.createElement('div');
+        ans.style.cssText='font-size:12px;margin-top:5px;font-weight:600;';
+        ans.style.color=ok?'var(--grn)':'var(--red)';
+        ans.textContent=(ok?'✓ Correct! ':'✗ Correct answer: ')+correctWord;
+        row.appendChild(ans);
+        // Also show example sentence on wrong
+        if(!ok){
+          var hint=document.createElement('div');
+          hint.style.cssText='font-size:11px;margin-top:4px;color:var(--ink3);font-style:italic;';
+          hint.textContent='e.g. '+cardEx;
+          row.appendChild(hint);
+        }
+        updateLive();
+        if(document.getElementById('s-rv').checked) showExpl(cardIdx,correctWord,cardKo,cardPos,cardEx);
+      };
+    })(winp, word, idx, ko, pos, ex, wfrow);
+    winp.addEventListener('keydown',function(e){if(e.key==='Enter') wfn();});
+    wbtn.addEventListener('click',wfn);
+    wfrow.appendChild(winp);
+    wfrow.appendChild(wbtn);
+    div.appendChild(wfrow);
+
+  } else if(type==='scramble'){
+    var sDiv=document.createElement('div');
+
+    // Target word + Korean scaffold
+    var swl=document.createElement('div');
+    swl.style.cssText='font-size:13px;font-weight:700;color:var(--acc);margin-bottom:4px;';
+    swl.textContent=word+' ('+pos+')';
+    sDiv.appendChild(swl);
+
+    var swk=document.createElement('div');
+    swk.style.cssText='font-size:12px;margin-bottom:.9rem;line-height:1.6;';
+    var koSent=KO_SENT[ex]||'';
+    swk.innerHTML='&#127472;&#127479; <span style="color:#1E6B3C;font-weight:600;">'+(koSent||ko)+'</span>';
+    sDiv.appendChild(swk);
+
+    // Instruction
+    var instr=document.createElement('div');
+    instr.style.cssText='font-size:11px;color:var(--ink3);margin-bottom:.6rem;';
+    instr.textContent='Click a word to move it to your answer. Click again to return it.';
+    sDiv.appendChild(instr);
+
+    // Tokenise sentence
+    var tokens=ex.split(' ');
+    var shuffled=tokens.slice().sort(function(){return Math.random()-.5;});
+    var safetyNet=0;
+    while(shuffled.join(' ')===tokens.join(' ')&&safetyNet<15){
+      shuffled=tokens.slice().sort(function(){return Math.random()-.5;});
+      safetyNet++;
+    }
+
+    // Word bank
+    var bankTitle=document.createElement('div');
+    bankTitle.style.cssText='font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;';
+    bankTitle.textContent='Word Bank';
+    sDiv.appendChild(bankTitle);
+
+    var bankZone=document.createElement('div');
+    bankZone.style.cssText='min-height:50px;border:2px dashed #b0b8c4;border-radius:10px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;background:var(--sf);margin-bottom:.9rem;';
+    sDiv.appendChild(bankZone);
+
+    // Answer zone
+    var ansTitle=document.createElement('div');
+    ansTitle.style.cssText='font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;';
+    ansTitle.textContent='Your Answer';
+    sDiv.appendChild(ansTitle);
+
+    var ansZone=document.createElement('div');
+    ansZone.style.cssText='min-height:50px;border:2px dashed #b0b8c4;border-radius:10px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;background:var(--sf);margin-bottom:.75rem;';
+    sDiv.appendChild(ansZone);
+
+    // Feedback div
+    var fb=document.createElement('div');
+    fb.style.cssText='font-size:13px;font-weight:600;min-height:20px;margin-bottom:.5rem;';
+    sDiv.appendChild(fb);
+
+    // Correct answer (hidden)
+    var keyDiv=document.createElement('div');
+    keyDiv.style.cssText='display:none;font-size:12px;color:#1E6B3C;font-style:italic;padding:6px 10px;background:#E3F5EB;border-radius:8px;border-left:3px solid #1E6B3C;margin-bottom:.5rem;';
+    sDiv.appendChild(keyDiv);
+
+    // Chip maker — uses span, not button, to avoid nesting issues
+    function makeWordChip(text){
+      var chip=document.createElement('span');
+      chip.textContent=text;
+      chip.style.cssText='display:inline-block;padding:7px 13px;background:#fff;border:1.5px solid #b0b8c4;border-radius:20px;font-size:13px;color:var(--ink);cursor:pointer;user-select:none;font-family:inherit;transition:background .15s,transform .1s;';
+      chip.addEventListener('mouseenter',function(){if(!chip.dataset.locked)chip.style.background='#E3EEF7';});
+      chip.addEventListener('mouseleave',function(){if(!chip.dataset.locked)chip.style.background='#fff';});
+      chip.addEventListener('click',function(){
+        if(answered[idx]!==undefined||chip.dataset.locked) return;
+        if(chip.parentElement===bankZone){
+          ansZone.appendChild(chip);
+        } else if(chip.parentElement===ansZone){
+          bankZone.appendChild(chip);
+        }
+      });
+      return chip;
+    }
+
+    // Populate bank
+    shuffled.forEach(function(t){ bankZone.appendChild(makeWordChip(t)); });
+
+    // Buttons row
+    var btnRow=document.createElement('div');
+    btnRow.style.cssText='display:flex;gap:8px;flex-wrap:wrap;margin-top:.25rem;';
+
+    var checkBtn=document.createElement('button');
+    checkBtn.textContent='Check ✓';
+    checkBtn.className='btn btn-p';
+    checkBtn.style.fontSize='13px';
+    checkBtn.type='button';
+    checkBtn.addEventListener('click',function(){
+      if(answered[idx]!==undefined) return;
+      var chips=[].slice.call(ansZone.querySelectorAll('span'));
+      if(chips.length===0){
+        fb.textContent='Add words to your answer first!';
+        fb.style.color='var(--red)';
+        return;
+      }
+      var attempt=chips.map(function(c){return c.textContent;});
+      var ok=(attempt.join(' ')===tokens.join(' '));
+      answered[idx]=attempt.join(' ');
+
+      // Lock all chips
+      var allChips=[].slice.call(bankZone.querySelectorAll('span')).concat([].slice.call(ansZone.querySelectorAll('span')));
+      allChips.forEach(function(c){
+        c.dataset.locked='1';
+        c.style.cursor='default';
+      });
+
+      if(ok){
+        correct++;
+        fb.textContent='✓ Perfect!';
+        fb.style.color='var(--grn)';
+        ansZone.style.borderColor='var(--grn)';
+        ansZone.style.background='var(--grn-l)';
+        chips.forEach(function(c){c.style.background='var(--grn-l)';c.style.borderColor='var(--grn)';c.style.color='var(--grn)';});
+      } else {
+        wrong++;
+        fb.textContent='✗ Not quite — check the order';
+        fb.style.color='var(--red)';
+        ansZone.style.borderColor='var(--red)';
+        ansZone.style.background='var(--red-l)';
+        chips.forEach(function(c){c.style.background='var(--red-l)';c.style.borderColor='var(--red)';c.style.color='var(--red)';});
+        keyDiv.textContent='✓ '+ex;
+        keyDiv.style.display='block';
+      }
+      checkBtn.disabled=true;
+      resetBtn.disabled=true;
+      updateLive();
+      if(document.getElementById('s-rv').checked) showExpl(idx,word,ko,pos,ex);
+    });
+
+    var resetBtn=document.createElement('button');
+    resetBtn.textContent='Reset ↺';
+    resetBtn.className='btn btn-s';
+    resetBtn.style.fontSize='13px';
+    resetBtn.type='button';
+    resetBtn.addEventListener('click',function(){
+      if(answered[idx]!==undefined) return;
+      [].slice.call(ansZone.querySelectorAll('span')).forEach(function(c){bankZone.appendChild(c);});
+      fb.textContent=''; fb.style.color='';
+      keyDiv.style.display='none'; keyDiv.textContent='';
+      ansZone.style.borderColor='#b0b8c4'; ansZone.style.background='var(--sf)';
+    });
+
+    btnRow.appendChild(checkBtn);
+    btnRow.appendChild(resetBtn);
+    sDiv.appendChild(btnRow);
+    div.appendChild(sDiv);
+
+  } else if(type==='scramble2'){
+    var sDiv2=document.createElement('div');
+
+    // Target word + Korean scaffold
+    var swl2=document.createElement('div');
+    swl2.style.cssText='font-size:13px;font-weight:700;color:var(--acc);margin-bottom:4px;';
+    swl2.textContent=word+' ('+pos+')';
+    sDiv2.appendChild(swl2);
+
+    var swk2=document.createElement('div');
+    swk2.style.cssText='font-size:12px;margin-bottom:.75rem;line-height:1.6;';
+    var koSent2=KO_SENT[ex]||'';
+    swk2.innerHTML='&#127472;&#127479; <span style="color:#1E6B3C;font-weight:600;">'+(koSent2||ko)+'</span>';
+    sDiv2.appendChild(swk2);
+
+    // POS legend
+    var legend=document.createElement('div');
+    legend.style.cssText='display:flex;flex-wrap:wrap;gap:6px;margin-bottom:.75rem;';
+    Object.keys(POS_COLORS).forEach(function(k){
+      var c=POS_COLORS[k];
+      var tag=document.createElement('span');
+      tag.style.cssText='font-size:10px;padding:2px 8px;border-radius:10px;border:1.5px solid '+c.border+';background:'+c.bg+';color:'+c.color+';font-weight:700;';
+      tag.textContent=c.label;
+      legend.appendChild(tag);
+    });
+    sDiv2.appendChild(legend);
+
+    // Instruction
+    var instr2=document.createElement('div');
+    instr2.style.cssText='font-size:11px;color:var(--ink3);margin-bottom:.6rem;';
+    instr2.textContent='Click a word chip to move it. Colour = part of speech.';
+    sDiv2.appendChild(instr2);
+
+    // Tokenise
+    var tokens2=ex.split(' ');
+    var shuffled2=tokens2.slice().sort(function(){return Math.random()-.5;});
+    var safety2=0;
+    while(shuffled2.join(' ')===tokens2.join(' ')&&safety2<15){
+      shuffled2=tokens2.slice().sort(function(){return Math.random()-.5;});
+      safety2++;
+    }
+
+    // Bank label
+    var bankTitle2=document.createElement('div');
+    bankTitle2.style.cssText='font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;';
+    bankTitle2.textContent='Word Bank';
+    sDiv2.appendChild(bankTitle2);
+
+    var bankZone2=document.createElement('div');
+    bankZone2.style.cssText='min-height:50px;border:2px dashed #b0b8c4;border-radius:10px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;background:var(--sf);margin-bottom:.9rem;';
+    sDiv2.appendChild(bankZone2);
+
+    // Answer label
+    var ansTitle2=document.createElement('div');
+    ansTitle2.style.cssText='font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;';
+    ansTitle2.textContent='Your Answer';
+    sDiv2.appendChild(ansTitle2);
+
+    var ansZone2=document.createElement('div');
+    ansZone2.style.cssText='min-height:50px;border:2px dashed #b0b8c4;border-radius:10px;padding:8px;display:flex;flex-wrap:wrap;gap:6px;background:var(--sf);margin-bottom:.75rem;';
+    sDiv2.appendChild(ansZone2);
+
+    var fb2=document.createElement('div');
+    fb2.style.cssText='font-size:13px;font-weight:600;min-height:20px;margin-bottom:.5rem;';
+    sDiv2.appendChild(fb2);
+
+    var keyDiv2=document.createElement('div');
+    keyDiv2.style.cssText='display:none;font-size:12px;color:#1E6B3C;font-style:italic;padding:6px 10px;background:#E3F5EB;border-radius:8px;border-left:3px solid #1E6B3C;margin-bottom:.5rem;';
+    sDiv2.appendChild(keyDiv2);
+
+    // Colour-coded chip maker
+    function makeColorChip(text){
+      var posType=tagToken(text);
+      var c=POS_COLORS[posType]||POS_COLORS['other'];
+      var chip=document.createElement('span');
+      chip.textContent=text;
+      chip.style.cssText='display:inline-block;padding:7px 13px;background:'+c.bg+';border:1.5px solid '+c.border+';border-radius:20px;font-size:13px;color:'+c.color+';cursor:pointer;user-select:none;font-family:inherit;transition:opacity .15s,transform .1s;font-weight:600;';
+      chip.addEventListener('mouseenter',function(){if(!chip.dataset.locked)chip.style.opacity='0.75';});
+      chip.addEventListener('mouseleave',function(){if(!chip.dataset.locked)chip.style.opacity='1';});
+      chip.addEventListener('click',function(){
+        if(answered[idx]!==undefined||chip.dataset.locked) return;
+        if(chip.parentElement===bankZone2){
+          ansZone2.appendChild(chip);
+        } else if(chip.parentElement===ansZone2){
+          bankZone2.appendChild(chip);
+        }
+      });
+      return chip;
+    }
+
+    shuffled2.forEach(function(t){ bankZone2.appendChild(makeColorChip(t)); });
+
+    var btnRow2=document.createElement('div');
+    btnRow2.style.cssText='display:flex;gap:8px;flex-wrap:wrap;';
+
+    var checkBtn2=document.createElement('button');
+    checkBtn2.textContent='Check ✓';
+    checkBtn2.className='btn btn-p';
+    checkBtn2.style.fontSize='13px';
+    checkBtn2.type='button';
+    checkBtn2.addEventListener('click',function(){
+      if(answered[idx]!==undefined) return;
+      var chips2=[].slice.call(ansZone2.querySelectorAll('span'));
+      if(chips2.length===0){
+        fb2.textContent='Add words to your answer first!';
+        fb2.style.color='var(--red)';
+        return;
+      }
+      var attempt2=chips2.map(function(c){return c.textContent;});
+      var ok2=(attempt2.join(' ')===tokens2.join(' '));
+      answered[idx]=attempt2.join(' ');
+      var allChips2=[].slice.call(bankZone2.querySelectorAll('span')).concat([].slice.call(ansZone2.querySelectorAll('span')));
+      allChips2.forEach(function(c){c.dataset.locked='1';c.style.cursor='default';});
+      if(ok2){
+        correct++;
+        fb2.textContent='✓ Perfect!';
+        fb2.style.color='var(--grn)';
+        ansZone2.style.borderColor='var(--grn)';
+        ansZone2.style.background='var(--grn-l)';
+      } else {
+        wrong++;
+        fb2.textContent='✗ Not quite — check the word order';
+        fb2.style.color='var(--red)';
+        ansZone2.style.borderColor='var(--red)';
+        ansZone2.style.background='var(--red-l)';
+        keyDiv2.textContent='✓ '+ex;
+        keyDiv2.style.display='block';
+      }
+      checkBtn2.disabled=true;
+      resetBtn2.disabled=true;
+      updateLive();
+      if(document.getElementById('s-rv').checked) showExpl(idx,word,ko,pos,ex);
+    });
+
+    var resetBtn2=document.createElement('button');
+    resetBtn2.textContent='Reset ↺';
+    resetBtn2.className='btn btn-s';
+    resetBtn2.style.fontSize='13px';
+    resetBtn2.type='button';
+    resetBtn2.addEventListener('click',function(){
+      if(answered[idx]!==undefined) return;
+      [].slice.call(ansZone2.querySelectorAll('span')).forEach(function(c){bankZone2.appendChild(c);});
+      fb2.textContent=''; fb2.style.color='';
+      keyDiv2.style.display='none'; keyDiv2.textContent='';
+      ansZone2.style.borderColor='#b0b8c4'; ansZone2.style.background='var(--sf)';
+    });
+
+    btnRow2.appendChild(checkBtn2);
+    btnRow2.appendChild(resetBtn2);
+    sDiv2.appendChild(btnRow2);
+    div.appendChild(sDiv2);
+
+  } else if(type==='scramble3'){
+    var s3=document.createElement('div');
+
+    // Word + Korean scaffold
+    var swl3=document.createElement('div');
+    swl3.style.cssText='font-size:13px;font-weight:700;color:var(--acc);margin-bottom:4px;';
+    swl3.textContent=word+' ('+pos+')';
+    s3.appendChild(swl3);
+
+    var swk3=document.createElement('div');
+    swk3.style.cssText='font-size:12px;margin-bottom:.75rem;line-height:1.6;';
+    var koSent3=KO_SENT[ex]||'';
+    swk3.innerHTML='&#127472;&#127479; <span style="color:#1E6B3C;font-weight:600;">'+(koSent3||ko)+'</span>';
+    s3.appendChild(swk3);
+
+    // Instruction
+    var instr3=document.createElement('div');
+    instr3.style.cssText='font-size:11px;color:var(--ink3);margin-bottom:.6rem;';
+    instr3.textContent='Click a chunk to move it. Each colour is a phrase group.';
+    s3.appendChild(instr3);
+
+    // Build chunks
+    var chunks3=chunkSentence(ex);
+    var shuffledChunks=chunks3.slice().sort(function(){return Math.random()-.5;});
+    var safety3=0;
+    while(shuffledChunks.join('|')===chunks3.join('|')&&safety3<15){
+      shuffledChunks=chunks3.slice().sort(function(){return Math.random()-.5;});
+      safety3++;
+    }
+
+    // Bank zone
+    var bankT3=document.createElement('div');
+    bankT3.style.cssText='font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;';
+    bankT3.textContent='Chunk Bank';
+    s3.appendChild(bankT3);
+
+    var bank3=document.createElement('div');
+    bank3.style.cssText='min-height:54px;border:2px dashed #b0b8c4;border-radius:10px;padding:8px;display:flex;flex-wrap:wrap;gap:7px;background:var(--sf);margin-bottom:.9rem;align-content:flex-start;';
+    s3.appendChild(bank3);
+
+    // Answer zone
+    var ansT3=document.createElement('div');
+    ansT3.style.cssText='font-size:11px;font-weight:700;color:var(--acc);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem;';
+    ansT3.textContent='Your Answer';
+    s3.appendChild(ansT3);
+
+    var ans3=document.createElement('div');
+    ans3.style.cssText='min-height:54px;border:2px dashed #b0b8c4;border-radius:10px;padding:8px;display:flex;flex-wrap:wrap;gap:7px;background:var(--sf);margin-bottom:.75rem;align-content:flex-start;';
+    s3.appendChild(ans3);
+
+    var fb3=document.createElement('div');
+    fb3.style.cssText='font-size:13px;font-weight:600;min-height:20px;margin-bottom:.5rem;';
+    s3.appendChild(fb3);
+
+    var key3=document.createElement('div');
+    key3.style.cssText='display:none;font-size:12px;color:#1E6B3C;font-style:italic;padding:6px 10px;background:#E3F5EB;border-radius:8px;border-left:3px solid #1E6B3C;margin-bottom:.5rem;';
+    s3.appendChild(key3);
+
+    // Assign a distinct colour to each chunk (by index in original order)
+    var chunkColorMap={};
+    chunks3.forEach(function(chunk,ci){
+      chunkColorMap[chunk]=CHUNK_PALETTE[ci%CHUNK_PALETTE.length];
+    });
+
+    // Chip maker
+    function makeChunkChip(text){
+      var c=chunkColorMap[text]||CHUNK_PALETTE[0];
+      var chip=document.createElement('span');
+      chip.textContent=text;
+      chip.style.cssText='display:inline-block;padding:8px 14px;background:'+c.bg+';border:2px solid '+c.border+';border-radius:12px;font-size:13px;color:'+c.color+';cursor:pointer;user-select:none;font-family:inherit;transition:opacity .15s;font-weight:600;line-height:1.4;';
+      chip.addEventListener('mouseenter',function(){if(!chip.dataset.locked)chip.style.opacity='0.7';});
+      chip.addEventListener('mouseleave',function(){if(!chip.dataset.locked)chip.style.opacity='1';});
+      chip.addEventListener('click',function(){
+        if(answered[idx]!==undefined||chip.dataset.locked) return;
+        if(chip.parentElement===bank3){
+          ans3.appendChild(chip);
+        } else if(chip.parentElement===ans3){
+          bank3.appendChild(chip);
+        }
+      });
+      return chip;
+    }
+
+    shuffledChunks.forEach(function(t){ bank3.appendChild(makeChunkChip(t)); });
+
+    // Buttons
+    var btnRow3=document.createElement('div');
+    btnRow3.style.cssText='display:flex;gap:8px;flex-wrap:wrap;';
+
+    var chkBtn3=document.createElement('button');
+    chkBtn3.textContent='Check ✓';
+    chkBtn3.className='btn btn-p';
+    chkBtn3.style.fontSize='13px';
+    chkBtn3.type='button';
+    chkBtn3.addEventListener('click',function(){
+      if(answered[idx]!==undefined) return;
+      var placed=[].slice.call(ans3.querySelectorAll('span'));
+      if(placed.length===0){
+        fb3.textContent='Move chunks to your answer first!';
+        fb3.style.color='var(--red)';
+        return;
+      }
+      var attempt3=placed.map(function(c){return c.textContent;});
+      // Compare reconstructed sentence
+      var reconstructed=attempt3.join(' ');
+      var ok3=(reconstructed===ex);
+      answered[idx]=reconstructed;
+      // Lock all
+      var all3=[].slice.call(bank3.querySelectorAll('span')).concat([].slice.call(ans3.querySelectorAll('span')));
+      all3.forEach(function(c){c.dataset.locked='1';c.style.cursor='default';});
+      if(ok3){
+        correct++;
+        fb3.textContent='✓ Perfect!';
+        fb3.style.color='var(--grn)';
+        ans3.style.borderColor='var(--grn)';
+        ans3.style.background='var(--grn-l)';
+      } else {
+        wrong++;
+        fb3.textContent='✗ Not quite — check the chunk order';
+        fb3.style.color='var(--red)';
+        ans3.style.borderColor='var(--red)';
+        ans3.style.background='var(--red-l)';
+        key3.textContent='✓ '+ex;
+        key3.style.display='block';
+      }
+      chkBtn3.disabled=true;
+      rstBtn3.disabled=true;
+      updateLive();
+      if(document.getElementById('s-rv').checked) showExpl(idx,word,ko,pos,ex);
+    });
+
+    var rstBtn3=document.createElement('button');
+    rstBtn3.textContent='Reset ↺';
+    rstBtn3.className='btn btn-s';
+    rstBtn3.style.fontSize='13px';
+    rstBtn3.type='button';
+    rstBtn3.addEventListener('click',function(){
+      if(answered[idx]!==undefined) return;
+      [].slice.call(ans3.querySelectorAll('span')).forEach(function(c){bank3.appendChild(c);});
+      fb3.textContent=''; fb3.style.color='';
+      key3.style.display='none'; key3.textContent='';
+      ans3.style.borderColor='#b0b8c4'; ans3.style.background='var(--sf)';
+    });
+
+    btnRow3.appendChild(chkBtn3);
+    btnRow3.appendChild(rstBtn3);
+    s3.appendChild(btnRow3);
+    div.appendChild(s3);
+
+
+  } else {
+    // fill
+    var sentence=makeFill(word,ex);
+    var p3=document.createElement('div');
+    p3.className='qprompt';
+    p3.style.fontSize='13px';
+    p3.style.fontWeight='400';
+    p3.textContent=sentence;
+    div.appendChild(p3);
+    // Korean translation scaffold — always shown
+    var koFill=document.createElement('div');
+    koFill.style.cssText='font-size:12px;color:#1E6B3C;font-weight:600;margin-top:5px;margin-bottom:.75rem;line-height:1.6;';
+    var koSentFill=KO_SENT[ex]||'';
+    if(koSentFill){
+      koFill.innerHTML='&#127472;&#127479; '+koSentFill;
+      div.appendChild(koFill);
+    }
+    var frow=document.createElement('div');
+    frow.className='frow';
+    var inp=document.createElement('input');
+    inp.type='text';
+    inp.className='finp';
+    inp.id='fi_'+idx;
+    inp.placeholder='Type the missing word...';
+    var checkBtn=document.createElement('button');
+    checkBtn.className='btn btn-s';
+    checkBtn.textContent='Check';
+    var checkFn=(function(input, correctWord, cardIdx){
+      return function(){
+        if(answered[cardIdx]!==undefined) return;
+        var val=input.value.trim().toLowerCase();
+        var cw=correctWord.toLowerCase();
+        var stripped=cw.replace(/^(be|get|make|have|do|feel|come|go|take|give|put|set|bring|keep|let|turn|look|run|fall|hold|stand|stay|become|seem|appear)\s+/,'');
+        var ok=(val===cw||val===stripped);
+        answered[cardIdx]=val;
+        if(ok){correct++;input.classList.add('correct');}
+        else{wrong++;input.classList.add('wrong');}
+        input.disabled=true;
+        checkBtn.disabled=true;
+        // show answer
+        var ans=document.createElement('div');
+        ans.style.cssText='font-size:12px;margin-top:5px;';
+        ans.style.color=ok?'var(--grn)':'var(--red)';
+        ans.textContent=(ok?'✓ Correct! ':'✗ Answer: ')+correctWord;
+        frow.appendChild(ans);
+        updateLive();
+        if(document.getElementById('s-rv').checked) showExpl(cardIdx,correctWord,ko,pos,ex);
+      };
+    })(inp, word, idx);
+    inp.addEventListener('keydown',function(e){if(e.key==='Enter') checkFn();});
+    checkBtn.addEventListener('click',checkFn);
+    frow.appendChild(inp);
+    frow.appendChild(checkBtn);
+    div.appendChild(frow);
+  }
+
+  // explanation div — empty until student answers
+  var expl=document.createElement('div');
+  expl.className='expl';
+  expl.id='expl_'+idx;
+  expl.innerHTML='';
+  div.appendChild(expl);
+  return div;
+}
+
+function checkScramble(idx, tokens, ansZone, fb, key){
+  if(answered[idx]!==undefined) return;
+  var chips=[].slice.call(ansZone.querySelectorAll('.word-chip'));
+  if(chips.length!==tokens.length) return; // not all placed yet
+  var attempt=chips.map(function(c){return c.textContent;});
+  var ok=JSON.stringify(attempt)===JSON.stringify(tokens);
+  answered[idx]=attempt.join(' ');
+  if(ok){
+    correct++;
+    fb.textContent='✓ Perfect!'; fb.className='scr-feedback ok';
+    ansZone.classList.add('correct-zone');
+    chips.forEach(function(c){c.classList.add('correct-chip');c.draggable=false;});
+  } else {
+    wrong++;
+    fb.textContent='✗ Not quite — check the word order'; fb.className='scr-feedback ng';
+    ansZone.classList.add('wrong-zone');
+    chips.forEach(function(c){c.classList.add('wrong-chip');c.draggable=false;});
+    key.textContent='✓ '+ex;
+    key.style.display='block';
+  }
+  // swk already shown as scaffold — nothing to reveal
+  updateLive();
+  if(document.getElementById('s-rv').checked){
+    var expl=document.getElementById('expl_'+idx);
+    if(expl) expl.style.display='block';
+  }
+}
+
+function showExpl(idx, word, ko, pos, ex){
+  var el=document.getElementById('expl_'+idx);
+  if(el){
+    el.innerHTML=
+      '<strong>'+word+'</strong> <span style="color:var(--ink3);">'+pos+'</span><br>'+
+      (DEFS[word]?'<span style="color:var(--acc);font-size:11px;">💡 '+DEFS[word]+'</span><br>':'')+
+      '<span style="color:var(--grn);font-size:12px;">🇰🇷 '+ko+'</span><br>'+
+      '<span style="color:var(--ink3);font-size:11px;font-style:italic;">'+ex+'</span>';
+    el.style.display='block';
+  }
+}
+
+// ─── REVEAL ALL ────────────────────────────────
+document.getElementById('s-reveal').addEventListener('click',function(){
+  quizWords.forEach(function(w,i){
+    if(answered[i]!==undefined) return;
+    answered[i]='revealed';
+    var card=document.getElementById('card_'+i);
+    if(!card) return;
+    card.querySelectorAll('.obtn').forEach(function(b){
+      b.disabled=true;
+      var text=b.textContent.slice(3);
+      if(text===w[2]||text===w[0]) b.classList.add('reveal');
+    });
+    var inp=document.getElementById('fi_'+i);
+    if(inp){inp.disabled=true;inp.value=w[0];inp.classList.add('reveal');}
+    // Reveal scramble if applicable
+    // scramble reveal handled by keyDiv inline styles
+    showExpl(i,w[0],w[2],w[1],w[3]);
+  });
+  updateLive();
+});
+
+// ─── RESULTS ───────────────────────────────────
+document.getElementById('s-results').addEventListener('click',showScore);
+function showScore(){
+  var total=quizWords.length, done=correct+wrong;
+  var pct=done>0?Math.round(correct/done*100):0;
+  document.getElementById('s-quiz').style.display='none';
+  document.getElementById('s-score').style.display='block';
+  var emoji=pct>=90?'🏆':pct>=70?'🎉':pct>=50?'👍':'💪';
+  document.getElementById('sc-emoji').textContent=emoji;
+  document.getElementById('sc-pct').textContent=pct+'%';
+  var name=document.getElementById('s-name').value;
+  document.getElementById('sc-sub').textContent=(name?name+' — ':'')+correct+' / '+total+' correct';
+  // Date and time
+  var now=new Date();
+  var days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  var months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var hh=now.getHours(), mm=now.getMinutes(), ss=now.getSeconds();
+  var ampm=hh>=12?'PM':'AM';
+  hh=hh%12||12;
+  var timeStr=hh+':'+(mm<10?'0':'')+mm+':'+(ss<10?'0':'')+ss+' '+ampm;
+  var dateStr=days[now.getDay()]+', '+months[now.getMonth()]+' '+now.getDate()+', '+now.getFullYear();
+  document.getElementById('sc-datetime').textContent='📅 '+dateStr+'  ·  🕐 '+timeStr;
+  // Encouragement message
+  var msg, bg, color;
+  if(pct===100){
+    msg="🌟 Perfect score! You're absolutely amazing! Keep it up!";
+    bg='#FFF8E1'; color='#E65100';
+  } else if(pct>=90){
+    msg="🏆 Excellent work! You've mastered this vocabulary!";
+    bg='#E8F5E9'; color='#1B5E20';
+  } else if(pct>=80){
+    msg="🎉 Great job! You're almost there — just a little more practice!";
+    bg='#E3F2FD'; color='#0D47A1';
+  } else if(pct>=70){
+    msg="👍 Good effort! Review the words you missed and try again!";
+    bg='#E8EAF6'; color='#1A237E';
+  } else if(pct>=50){
+    msg="💪 Keep going! Every mistake is a chance to learn something new!";
+    bg='#FFF3E0'; color='#E65100';
+  } else if(pct>=30){
+    msg="📖 Don't give up! Read through the word list and try again — you can do it!";
+    bg='#FCE4EC'; color='#880E4F';
+  } else {
+    msg="🌱 Every expert was once a beginner! Study the list and come back stronger!";
+    bg='#F3E5F5'; color='#4A148C';
+  }
+  var el=document.getElementById('sc-encourage');
+  el.textContent=msg;
+  el.style.background=bg;
+  el.style.color=color;
+  el.style.border='1.5px solid '+color;
+  document.getElementById('sc-grid').innerHTML=
+    '<div class="sbox"><div class="v">'+correct+'</div><div class="l">Correct ✓</div></div>'+
+    '<div class="sbox"><div class="v">'+wrong+'</div><div class="l">Wrong ✗</div></div>'+
+    '<div class="sbox"><div class="v">'+(total-done)+'</div><div class="l">Skipped</div></div>'+
+    '<div class="sbox"><div class="v">'+pct+'%</div><div class="l">Score</div></div>';
+  // wrong review
+  var rl=document.getElementById('sc-review');
+  var wrongs=[];
+  quizWords.forEach(function(w,i){
+    var a=answered[i];
+    if(a===undefined||a==='revealed') return;
+    // For write modes: wrong if typed answer !== correct word (exact)
+    // For MC: wrong if chosen option !== correct answer
+    // For fill: wrong if typed !== word
+    var correctWord=w[0];
+    var correctKo=w[2];
+    var isWrong=false;
+    if(a!==correctWord && a!==correctWord.toLowerCase() && a!==correctKo && a.toLowerCase()!==correctWord.toLowerCase()){
+      isWrong=true;
+    }
+    if(isWrong) wrongs.push(w);
+  });
+  if(!wrongs.length){rl.innerHTML='<p style="font-size:13px;color:var(--grn);">No wrong answers — great work! 🎉</p>';return;}
+  rl.innerHTML=wrongs.map(function(w){
+    var engdef=DEFS[w[0]]?'<span style="color:var(--acc);font-size:11px;font-style:italic;">💡 '+DEFS[w[0]]+'</span><br>':'';
+    return '<div class="ritem"><div class="rword">'+w[0]+' <span style="font-size:11px;color:var(--ink3);">'+w[1]+'</span></div>'+
+      '<div class="rans">'+engdef+'<span style="color:var(--grn);">✓ '+w[2]+'</span><br>'+
+      '<span style="color:var(--ink3);font-size:11px;font-style:italic;">'+w[3]+'</span></div></div>';
+  }).join('');
+}
+
+document.getElementById('sc-retry').addEventListener('click',function(){
+  document.getElementById('s-score').style.display='none';
+  answered={}; correct=0; wrong=0;
+  if(document.getElementById('s-sh').checked) quizWords=shuffle(quizWords);
+  document.getElementById('s-quiz').style.display='block';
+  updateLive();
+  renderQuiz();
+});
+document.getElementById('sc-new').addEventListener('click',function(){
+  document.getElementById('s-score').style.display='none';
+  document.getElementById('s-setup').style.display='block';
+});
+</script>
+</body>
+</html>
