@@ -229,7 +229,8 @@ input[type=text]:focus{border-color:var(--acc);}
           <div class="cat-arrow" id="arrow-sent">▶</div>
         </div>
         <div class="cat-body" id="body-sent" style="display:none;">
-          <div class="mc" id="mode-fi"><div class="mc-t">Fill in the blank 빈칸 채우기 <span class="stars">⭐⭐⭐</span></div><div class="mc-d">Type the missing word in the example sentence</div></div>
+          <div class="mc" id="mode-fi2"><div class="mc-t">✏️ Fill in the blank + 🇰🇷 <span class="stars">⭐⭐</span></div><div class="mc-d">Korean translation shown as scaffold</div></div>
+          <div class="mc" id="mode-fi"><div class="mc-t">✏️ Fill in the blank <span class="stars">⭐⭐⭐</span></div><div class="mc-d">Type the missing word — no Korean hint</div></div>
           <div class="mc" id="mode-scr"><div class="mc-t">🔀 Sentence Scramble <span class="stars">⭐⭐⭐⭐⭐</span></div><div class="mc-d">Click words to rebuild the example sentence in order</div></div>
           <div class="mc" id="mode-scr2"><div class="mc-t">🌈 Medium Scramble <span class="stars">⭐⭐</span></div><div class="mc-d">Words colour-coded by part of speech as a hint</div></div>
           <div class="mc" id="mode-scr3"><div class="mc-t">🧩 Easy Scramble — Chunks <span class="stars">⭐</span></div><div class="mc-d">Arrange meaningful phrase chunks in the right order</div></div>
@@ -633,13 +634,13 @@ document.getElementById('t-gen-btn').addEventListener('click',function(){
 });
 
 // ─── STUDENT: MODE SELECT ──────────────────────
-['mc','fi','w1','w2','scr','scr2','scr3'].forEach(function(m){
+['mc','fi','fi2','w1','w2','scr','scr2','scr3'].forEach(function(m){
   var el=document.getElementById('mode-'+m);
   if(!el) return;
   el.addEventListener('click',function(e){
     e.stopPropagation(); // prevent cat card toggle
     quizMode=m;
-    ['mc','fi','w1','w2','scr','scr2','scr3'].forEach(function(id){
+    ['mc','fi','fi2','w1','w2','scr','scr2','scr3'].forEach(function(id){
       var el2=document.getElementById('mode-'+id);
       if(el2) el2.classList.toggle('sel',id===m);
     });
@@ -701,6 +702,7 @@ function makeQCard(w,idx){
   var type;
   if(quizMode==='mc') type='mc_ko';
   else if(quizMode==='fi') type='fill';
+  else if(quizMode==='fi2') type='fill2';
   else if(quizMode==='w1') type='write_ko';
   else if(quizMode==='w2') type='write_def';
   else if(quizMode==='scr') type='scramble';
@@ -719,6 +721,7 @@ function makeQCard(w,idx){
   else if(type==='scramble') meta+='<span class="tbadge">🔀 Scramble</span>';
   else if(type==='scramble2') meta+='<span class="tbadge">🌈 Medium Scramble</span>';
   else if(type==='scramble3') meta+='<span class="tbadge">🧩 Easy Chunks</span>';
+  else if(type==='fill2') meta+='<span class="tbadge">✏️ Fill + 🇰🇷</span>';
   else meta+='<span class="tbadge">Fill in the blank</span>';
   meta+='</div>';
   div.innerHTML=meta;
