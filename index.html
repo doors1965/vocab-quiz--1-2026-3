@@ -245,7 +245,8 @@ input[type=text]:focus{border-color:var(--acc);}
         <label class="ck"><input type="checkbox" id="s-rv"><span>Show explanation after each answer</span></label>
       </div>
       <div style="margin-top:.6rem;font-size:13px;color:var(--ink2);">
-        Name: <input type="text" id="s-name" placeholder="이름 (선택사항)" style="width:150px;margin-left:6px;">
+        Name: <input type="text" id="s-name" placeholder="이름을 입력하세요 *" style="width:180px;margin-left:6px;border:1.5px solid var(--bds);" required>
+        <span style="font-size:11px;color:var(--red);margin-left:4px;">* 필수</span>
       </div>
     </div>
     <button class="btn btn-g" id="s-start" style="width:100%;padding:13px;font-size:15px;">Start Quiz →</button>
