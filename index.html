@@ -269,6 +269,9 @@ input[type=text]:focus{border-color:var(--acc);}
 
   <div id="s-score" style="display:none;">
     <div class="card">
+      <div style="text-align:right;margin-bottom:.25rem;">
+        <span id="sc-tasktype" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:12px;background:#E3EEF7;color:#1A3A5C;letter-spacing:.3px;"></span>
+      </div>
       <div class="score-emoji" id="sc-emoji"></div>
       <div class="score-big" id="sc-pct"></div>
       <div class="score-sub" id="sc-sub"></div>
@@ -1433,6 +1436,19 @@ function showScore(){
   document.getElementById('s-quiz').style.display='none';
   document.getElementById('s-score').style.display='block';
   var emoji=pct>=90?'🏆':pct>=70?'🎉':pct>=50?'👍':'💪';
+  // Task type label
+  var taskLabels={
+    'mc':'📚 Multiple choice 객관식',
+    'fi':'✏️ Fill in the blank',
+    'fi2':'✏️ Fill in the blank + 🇰🇷',
+    'w1':'✍️ Type 1 — Korean → English',
+    'w2':'✍️ Type 2 — Definition → English',
+    'scr':'🔀 Sentence Scramble',
+    'scr2':'🌈 Medium Scramble',
+    'scr3':'🧩 Easy Scramble — Chunks'
+  };
+  var taskEl=document.getElementById('sc-tasktype');
+  if(taskEl) taskEl.textContent=taskLabels[quizMode]||quizMode;
   document.getElementById('sc-emoji').textContent=emoji;
   document.getElementById('sc-pct').textContent=pct+'%';
   var name=document.getElementById('s-name').value;
